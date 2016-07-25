@@ -87,6 +87,10 @@ public class CheckLinkService {
 		return null;
 	}
 	
+	public void checkLinksOnPortal() {
+		//TODO
+	}
+	
 	private void initConnectionParams(HttpURLConnection conn, String cookies) throws ProtocolException {
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0");

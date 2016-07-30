@@ -8,12 +8,24 @@ import org.slf4j.LoggerFactory;
 
 import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkService;
 
+/**
+ * 
+ * TODO add description
+ *
+ * @author Dmytro Kudria
+ * @author <a href="http://dimasik.name">http://dimasik.name</a>
+ *
+ */
 public class CheckLinksOnPortalJob implements Job {
 
 	private static final Logger logger = LoggerFactory.getLogger(CheckLinksOnPortalJob.class);
 	
 	private CheckLinkService service;
 	
+	/**
+	 * 
+	 * @param service
+	 */
 	public void setService(CheckLinkService service) {
 		this.service = service;
 	}
@@ -21,8 +33,8 @@ public class CheckLinksOnPortalJob implements Job {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
-			// TODO Auto-generated method stub
 			service.checkLinksOnPortal();
+			// TODO process result
 			logger.info("Check link service");
 		} catch (Exception e) {
 			logger.error("Error to process " + CheckLinksOnPortalJob.class.getSimpleName() 

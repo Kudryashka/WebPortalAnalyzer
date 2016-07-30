@@ -29,11 +29,18 @@ public class ScheduleService {
 	private Scheduler scheduler;
 	private CheckLinkService checkLinkService;
 	
+	/**
+	 * Used to inject {@link CheckLinkService}.
+	 */
 	@Autowired
 	public void setCheckLinkService(CheckLinkService checkLinkService) {
 		this.checkLinkService = checkLinkService;
 	}
 
+	/**
+	 * <b>Don't call this manually!</b>
+	 * Used to handle scheduler initialization.
+	 */
 	@EventListener
 	public void handleSchedulerInitialization(ContextRefreshedEvent event) throws SchedulerException {
 		synchronized (schedulerMutex) {
@@ -52,6 +59,10 @@ public class ScheduleService {
 		}
 	}
 	
+	/**
+	 * <b>Don't call this manually!</b>
+	 * Used to handle scheduler destroying.
+	 */
 	@EventListener
 	public void handleSchedulerShutdown(ContextClosedEvent event) {
 		synchronized (schedulerMutex) {

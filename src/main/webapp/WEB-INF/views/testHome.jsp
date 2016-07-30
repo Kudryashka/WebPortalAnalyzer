@@ -8,5 +8,6 @@
 <h1>
 	Just simple test home page!  
 </h1>
+<a href="http://Oops">Oops, broken link</a>
 </body>
 </html>

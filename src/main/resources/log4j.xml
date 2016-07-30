@@ -12,7 +12,7 @@
 	
 	<!-- Application Loggers -->
 	<logger name="name.dimasik.dev.web.portalanalyzer">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->

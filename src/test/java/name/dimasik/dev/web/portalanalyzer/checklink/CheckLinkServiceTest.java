@@ -3,6 +3,8 @@ package name.dimasik.dev.web.portalanalyzer.checklink;
 import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -77,7 +79,11 @@ public class CheckLinkServiceTest {
 	
 	@Test
 	public void testLinksSearchOnPage() {
-		mService.getAllLinksOnPage(TEST_PAGE_WITH_LINKS);
+		List<LinkInfo> links = mService.getAllLinksOnPage(TEST_PAGE_WITH_LINKS);
+		List<LinkInfo> anchors = links.stream()
+				.filter(link -> link.type == LinkType.ANCHOR)
+				.collect(Collectors.toList()); 
+		assertTrue(anchors.size() == 5);
 	}
 	
 	@Test

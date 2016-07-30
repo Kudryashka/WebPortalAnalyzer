@@ -47,7 +47,7 @@ public class ScheduleService {
 				}
 				
 				//TODO initialize scheduler jobs
-				scheduleCheckLinksOnPortalJob(scheduler);
+//				scheduleCheckLinksOnPortalJob(scheduler);
 			}
 		}
 	}

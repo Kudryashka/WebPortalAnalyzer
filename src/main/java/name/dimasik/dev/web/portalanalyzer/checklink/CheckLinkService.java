@@ -5,12 +5,25 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import static name.dimasik.dev.web.portalanalyzer.checklink.LinkType.*;
 
 @Service
 public class CheckLinkService {
+	
+	private static Logger logger = LoggerFactory.getLogger(CheckLinkService.class);
 
 	static {
 		// Assume SecurityException should not be thrown 
@@ -79,18 +92,45 @@ public class CheckLinkService {
 	}
 	
 	/**
-	 * 
+	 * TODO
 	 * @return
 	 */
 	public List<LinkInfo> getAllLinksOnPage(String url) {
+		logger.info("All links requested. Url: " + url);
+		List<LinkInfo> result = new ArrayList<>();
+		//TODO webClient should be single
+		WebClient webClient = new WebClient(BrowserVersion.FIREFOX_45);
 		
-		return null;
+		HtmlPage page = null;
+		try {
+			page = webClient.getPage(url);
+			//TODO timeout should be parameterized
+			//wait for background jobs
+			webClient.waitForBackgroundJavaScript(1000);
+		} catch (FailingHttpStatusCodeException | IOException e) {
+			logger.error("Error on page loading. Exception message: " + e.getMessage());
+		}
+		
+		if (page != null) {
+			logger.debug("Catch links with type : Anchor");;
+			//catch anchors
+			List<DomElement> aElements = page.getElementsByTagName("a");
+			for (DomElement e : aElements) {
+				result.add(new LinkInfo(ANCHOR, e.getAttribute("href"), url));
+			}
+		}
+		
+		return result;
 	}
 	
 	public void checkLinksOnPortal() {
 		//TODO
 	}
 	
+	/*
+	 * Initialize connection parameters to emulate real user connection.
+	 * TODO add special meta to identify itself 
+	 */
 	private void initConnectionParams(HttpURLConnection conn, String cookies) throws ProtocolException {
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0");
@@ -99,6 +139,10 @@ public class CheckLinkService {
 		}
 	}
 	
+	/*
+	 * Simplify URL to standard format
+	 * @return A split of URL that represents protocol and URL tail separately
+	 */
 	private String[] prepareUrlToCompare(String url) {
 		String[] urlSplit = url.trim().split("://"); //[0] - protocol, [1] - left part
 		while (urlSplit[1].contains("//")) {

@@ -17,11 +17,16 @@ public class TestController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TestController.class);
 	
-	@GetMapping("/testPageWithLinks")
+	@GetMapping("/testHome")
 	public String getTestHome() {
+		return "testHome";
+	}
+	
+	@GetMapping("/testPageWithLinks")
+	public String getTestPageWithLinks() {
 		logger.info("getTestPageWithLinks()");
 		
-		return "home";
+		return "testPageWithLinks";
 	}
 	
 	@GetMapping("/testUserInfo")
@@ -32,6 +37,6 @@ public class TestController {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/processRawUserRequest");
 		dispatcher.include(request, response);
 		
-		return "home";
+		return "testHome";
 	}
 }

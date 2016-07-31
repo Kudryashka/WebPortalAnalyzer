@@ -11,8 +11,8 @@
 target
 src/main/webapp/client/typings/
 src/main/webapp/client/node_modules/
-src/main/webapp/client/app/*.js
-src/main/webapp/client/app/*.js.map
+src/main/webapp/client/app/**/*.js
+src/main/webapp/client/app/**/*.js.map
 
 #Programs swap files
 

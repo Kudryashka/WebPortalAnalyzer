@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <base href="/">
@@ -14,9 +15,13 @@
     <script>
       System.import('app').catch(function(err){ console.error(err); });
     </script>
+    <!-- Bootstrap -->
+    <script src="node_modules/ng2-bootstrap/bundles/ng2-bootstrap.min.js"></script>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
   </head>
   
   <body>
-    <client-app>Loading...</my-client>
+    <client-app>Loading...</client-app>
   </body>
 </html>

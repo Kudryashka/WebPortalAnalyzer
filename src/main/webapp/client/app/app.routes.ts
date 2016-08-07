@@ -7,6 +7,7 @@ import {MobileAppsComponent} from './mobile-apps/mobile-apps.component';
 import {MonitoringComponent} from './monitoring/monitoring.component';
 import {OnlineHelpComponent} from './online-help/online-help.component';
 import {SettingsComponent} from './settings/settings.component';
+import {SearchComponent} from './search/search.component';
 
 
 const routes: RouterConfig = [
@@ -38,6 +39,10 @@ const routes: RouterConfig = [
 	{
 		path: 'helps',
 		component: OnlineHelpComponent
+	},
+	{
+		path: 'search',
+		component: SearchComponent
 	},
 	{
 		path: 'settings',

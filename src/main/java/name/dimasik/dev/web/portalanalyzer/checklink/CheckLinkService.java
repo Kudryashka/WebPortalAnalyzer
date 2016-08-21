@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +30,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import name.dimasik.dev.web.portalanalyzer.prefs.Preference;
 import name.dimasik.dev.web.portalanalyzer.prefs.PreferencesProvider;
+import name.dimasik.dev.web.portalanalyzer.schedule.ScheduleService;
 
 import static name.dimasik.dev.web.portalanalyzer.checklink.LinkType.*;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * Check accessibility of resources represented by the links on portal.
@@ -47,6 +53,9 @@ public class CheckLinkService {
 	
 	private WebClient webClient;
 	private PreferencesProvider prefsProvider;
+	private ScheduleService scheduler;
+	private JobDetail jobDetail;
+	private Trigger nowTrigger;
 
 	/**
 	 * <b>Don't call this manually!</b>
@@ -55,6 +64,16 @@ public class CheckLinkService {
 	@PostConstruct
 	public final void onInitService() {
 		webClient = new WebClient(BrowserVersion.FIREFOX_45);
+		//initialize scheduler job
+		JobDataMap dataMap = new JobDataMap();
+		dataMap.put("service", this); 
+		jobDetail = newJob(CheckLinksSchedulerJob.class)
+				.withIdentity("checkLinksOnPortalJob", "checkLinks")
+				.usingJobData(dataMap).build();
+		//initialize now trigger
+		nowTrigger = newTrigger()
+				.withIdentity("checkLinksOnPortalTrigger", "checkLinks")
+				.startNow().build();
 		logger.info("Service initialized");
 	}
 	
@@ -74,6 +93,38 @@ public class CheckLinkService {
 	@Autowired
 	public void setPreferencesProvider(PreferencesProvider prefsProvider) {
 		this.prefsProvider = prefsProvider;
+	}
+	
+	/**
+	 * Used to inject {@link ScheduleService}.
+	 */
+	@Autowired
+	public void setScheduleService(ScheduleService scheduler) {
+		this.scheduler = scheduler;
+	}
+	
+	/**
+	 * TODO
+	 */
+	public void processCheckLinksOnPortalNow() {
+		boolean isProcessing = scheduler.isJobExecuting(CheckLinksSchedulerJob.class);
+		if (!isProcessing) {
+			scheduler.scheduleJob(jobDetail, nowTrigger); 
+		}
+	}
+	
+	public void stopCurrentCheckLinksOnPortalProcess() {
+		boolean isProcessing = scheduler.isJobExecuting(CheckLinksSchedulerJob.class);
+		if (isProcessing) {
+			//TODO
+		}
+	}
+		
+	/**
+	 * TODO
+	 */
+	public void submitSchedulerRule() {
+		//TODO
 	}
 	
 	/**
@@ -284,7 +335,7 @@ public class CheckLinkService {
 	 * @param links The list to be filtered
 	 * @return Filtered list
 	 */
-	public List<LinkInfo> filterLinksWithoutTargetLocation(List<LinkInfo> links) {
+	public static List<LinkInfo> filterLinksWithoutTargetLocation(List<LinkInfo> links) {
 		return links.stream()
 				.filter(link -> (link.targetUrl != null && !link.targetUrl.isEmpty()))
 				.collect(Collectors.toList());
@@ -295,7 +346,7 @@ public class CheckLinkService {
 	 * @param links List with {@link LinkInfo} to be transformed
 	 * @return List with transformed elements.
 	 */
-	public List<LinkInfo> transformRelativeLinksToAbsolute(List<LinkInfo> links) {
+	public static List<LinkInfo> transformRelativeLinksToAbsolute(List<LinkInfo> links) {
 		List<LinkInfo> result = new ArrayList<>();
 		for (LinkInfo info : links) {
 			String targetUrl = info.targetUrl;
@@ -325,7 +376,7 @@ public class CheckLinkService {
 	 * @param links The list to be filtered
 	 * @return Filtered list
 	 */
-	public List<LinkInfo> filterAbsoluteLinksByProtocol(List<LinkInfo> links) {
+	public static List<LinkInfo> filterAbsoluteLinksByProtocol(List<LinkInfo> links) {
 		//http and https allowed yet
 		return links.stream()
 				.filter(link -> (link.targetUrl.startsWith("http://") || link.targetUrl.startsWith("https://")))
@@ -340,7 +391,7 @@ public class CheckLinkService {
 	 * @param path The path
 	 * @return Builded URL
 	 */
-	public final String buildURL(String protocol, String DN, int port, String path) {
+	public static String buildURL(String protocol, String DN, int port, String path) {
 		StringBuilder urlBuilder =  new StringBuilder(protocol).append("://").append(DN);
 
 		boolean isDefaultPort = false;

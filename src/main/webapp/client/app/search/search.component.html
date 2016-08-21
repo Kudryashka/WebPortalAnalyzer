@@ -1,6 +1,6 @@
 <div class="raw container-fluid">
 	<div class="container col-md-6">
-		<h2 class="page-header">Найчастіші безуспішні запити за тиждень</h2>
+		<h2 class="page-header">Безуспішні запити за останніх 10 днів</h2>
 		<table class="table table-striped">
 			<thead>
 				<th>#</th>
@@ -8,26 +8,16 @@
 				<th><p class="text-right">Кількість запитів</p></th>
 			</thead>
 			<tbody>
-				<tr>
-					<td>1</td>
-					<td>Безкоштовний юрист</td>
-					<td><p class="text-right">123</p></td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td>Вляпався по вуха, що робити</td>
-					<td><p class="text-right">12</p></td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>Сусід грубіян</td>
-					<td><p class="text-right">1</p></td>
+				<tr *ngFor="let query of tenDaysQueries; let i=index">
+					<td>{{i + 1}}</td>
+					<td>{{query.query}}</td>
+					<td><p class="text-right">{{query.count}}</p></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 	<div class="container col-md-6">
-		<h2 class="page-header">Найчастіші безуспішні запити за місяць</h2>
+		<h2 class="page-header">Безуспішні запити за останніх 30 днів</h2>
 		<table class="table table-striped">
 			<thead>
 				<th>#</th>
@@ -35,25 +25,10 @@
 				<th><p class="text-right">Кількість запитів</p></th>
 			</thead>
 			<tbody>
-				<tr>
-					<td>1</td>
-					<td>Безкоштовний юрист</td>
-					<td><p class="text-right">232</p></td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td>Що робити з Путіним</td>
-					<td><p class="text-right">23</p></td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>Вляпався по вуха, що робити</td>
-					<td><p class="text-right">12</p></td>
-				</tr>
-				<tr>
-					<td>4</td>
-					<td>Сусід грубіян</td>
-					<td><p class="text-right">1</p></td>
+				<tr *ngFor="let query of thirtyDaysQueries; let i=index">
+					<td>{{i + 1}}</td>
+					<td>{{query.query}}</td>
+					<td><p class="text-right">{{query.count}}</p></td>
 				</tr>
 			</tbody>
 		</table>

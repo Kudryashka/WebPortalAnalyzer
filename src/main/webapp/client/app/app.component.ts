@@ -2,6 +2,8 @@ import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {ROUTER_DIRECTIVES} from '@angular/router';
 
 import {SchedulerService} from './schedule/scheduler-service';
+import {SearchService} from './search/search.service';
+
 
 
 @Component({
@@ -9,10 +11,10 @@ import {SchedulerService} from './schedule/scheduler-service';
 	templateUrl: 'app/app.component.html',
 	styleUrls: ['app/app.component.css'],
 	directives: [ROUTER_DIRECTIVES],
-	providers: [SchedulerService]})
+	providers: [SchedulerService, SearchService]})
 export class AppComponent {
 	title = 'WebPortalAnalyzer';
-	description = 'Thin client for application';
+	description = 'Тонкий клієнт для аплікації';
 
 	constructor(private viewContainerRef: ViewContainerRef) {}
 }

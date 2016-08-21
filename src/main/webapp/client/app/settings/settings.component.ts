@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 
 @Component({
 	selector: 'settings',
-	template: '<p>Its settings</p>'
+	template: '<p>Налаштування</p>'
 })
 export class SettingsComponent {
 }

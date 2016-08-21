@@ -24,12 +24,12 @@ import name.dimasik.dev.web.portalanalyzer.prefs.PreferencesProvider;
 public class CheckLinkServiceTest {
 	
 	public static final String INVALID_LINK = "foo://test";
-	public static final String ACCESSIBLE_LINK = "http://localhost:8080/WebPortalAnalyzer/";
-	public static final String ERROR_LINK = "http://localhost:8080/WebPortalAnalyzer/unbelivableerrorpage";
+	public static final String ACCESSIBLE_LINK = "http://localhost:8080/WebPortalAnalyzer/api/testHome";
+	public static final String ERROR_LINK = "http://localhost:8080/WebPortalAnalyzer/api/unbelivableerrorpage";
 	public static final String UNREACHABLE_LINK = "http://localhost:9173/";
 	
-	public static final String TEST_HOME_PAGE = "http://localhost:8080/WebPortalAnalyzer/testHome";
-	public static final String TEST_PAGE_WITH_LINKS = "http://localhost:8080/WebPortalAnalyzer/testPageWithLinks";
+	public static final String TEST_HOME_PAGE = "http://localhost:8080/WebPortalAnalyzer/api/testHome";
+	public static final String TEST_PAGE_WITH_LINKS = "http://localhost:8080/WebPortalAnalyzer/api/testPageWithLinks";
 
 	private static CheckLinkService mService;
 	
@@ -51,7 +51,7 @@ public class CheckLinkServiceTest {
 			public String[] getStringArrayPreference(Preference pref) {
 				switch(pref) {
 				case CHECK_LINK_START_LOCATIONS:
-					return new String[] {"WebPortalAnalyzer/testPageWithLinks"};
+					return new String[] {"WebPortalAnalyzer/api/testPageWithLinks"};
 				default:
 					return super.getStringArrayPreference(pref);
 				
@@ -155,10 +155,10 @@ public class CheckLinkServiceTest {
 	 */
 	@Test
 	public void testBuildUrl() {
-		String httpUrl = mService.buildURL("http", "test", 80, "testPath");
-		String httpsUrl = mService.buildURL("https", "test", 443, "testPath");
-		String https80Url = mService.buildURL("https", "test", 80, "testPath");
-		String http8080Url = mService.buildURL("http", "test", 8080, "testPath");
+		String httpUrl = CheckLinkService.buildURL("http", "test", 80, "testPath");
+		String httpsUrl = CheckLinkService.buildURL("https", "test", 443, "testPath");
+		String https80Url = CheckLinkService.buildURL("https", "test", 80, "testPath");
+		String http8080Url = CheckLinkService.buildURL("http", "test", 8080, "testPath");
 		
 		assertEquals(httpUrl, "http://test/testPath");
 		assertEquals(httpsUrl, "https://test/testPath");
@@ -177,7 +177,7 @@ public class CheckLinkServiceTest {
 		links.add(new LinkInfo(LinkType.ANCHOR, "http://another", "http://localhost"));
 		links.add(new LinkInfo(LinkType.ANCHOR, "relative", "http://localhost/path"));
 		
-		List<LinkInfo> transformed = mService.transformRelativeLinksToAbsolute(links);
+		List<LinkInfo> transformed = CheckLinkService.transformRelativeLinksToAbsolute(links);
 		assertEquals(transformed.size(), 4);
 		assertTrue(transformed.stream().anyMatch(info -> info.targetUrl.equals("http://localhost/page1")));
 		assertTrue(transformed.stream().anyMatch(info -> info.targetUrl.equals("http://localhost/page2")));
@@ -199,7 +199,7 @@ public class CheckLinkServiceTest {
 		links.add(new LinkInfo(LinkType.ANCHOR, "httpx://localhost", null));
 		
 		
-		List<LinkInfo> filtered = mService.filterAbsoluteLinksByProtocol(links);
+		List<LinkInfo> filtered = CheckLinkService.filterAbsoluteLinksByProtocol(links);
 		assertEquals(filtered.size(), 3);
 		assertTrue(filtered.stream().anyMatch(info -> info.targetUrl.equals("http://localhost")));
 		assertTrue(filtered.stream().anyMatch(info -> info.targetUrl.equals("http://localhost2")));
@@ -223,8 +223,8 @@ public class CheckLinkServiceTest {
 		
 		System.out.println(links);
 		
-		assertTrue(links.stream().anyMatch(link -> link.targetUrl.equals("http://Oops") && link.linkStatus == LinkStatus.UNREACHABLE));
-		assertTrue(links.stream().anyMatch(link -> link.targetUrl.equals("http://localhost:8080/WebPortalAnalyzer/testPageWithLinks") && link.linkStatus == LinkStatus.OK));
-		assertTrue(links.stream().anyMatch(link -> link.targetUrl.equals("http://localhost:8080/WebPortalAnalyzer/testHome") && link.linkStatus == LinkStatus.OK));
+		assertTrue(links.stream().anyMatch(link -> link.targetUrl.equalsIgnoreCase("http://Oops") && link.linkStatus == LinkStatus.UNREACHABLE));
+		assertTrue(links.stream().anyMatch(link -> link.targetUrl.equalsIgnoreCase("http://localhost:8080/WebPortalAnalyzer/api/testPageWithLinks") && link.linkStatus == LinkStatus.OK));
+		assertTrue(links.stream().anyMatch(link -> link.targetUrl.equalsIgnoreCase("http://localhost:8080/WebPortalAnalyzer/api/testHome") && link.linkStatus == LinkStatus.OK));
 	}
 }

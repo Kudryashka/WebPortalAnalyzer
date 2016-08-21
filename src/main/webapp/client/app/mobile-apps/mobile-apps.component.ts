@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 
 @Component({
 	selector: 'mobile-apps',
-	template: '<p>It is mobile apps</p>'
+	templateUrl: 'app/mobile-apps/mobile-apps.component.html'
 })
 export class MobileAppsComponent {
 

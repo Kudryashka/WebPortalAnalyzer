@@ -1,24 +1,23 @@
 package name.dimasik.dev.web.portalanalyzer.schedule;
 
-import org.quartz.JobDataMap;
+import org.quartz.Job;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkService;
+import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinksSchedulerJob;
 
-import static org.quartz.JobBuilder.*;
-import static org.quartz.TriggerBuilder.*;
+
+import java.util.List;
 
 @Service
 public class ScheduleService {
@@ -27,15 +26,6 @@ public class ScheduleService {
 	
 	private final Object schedulerMutex = new Object();
 	private Scheduler scheduler;
-	private CheckLinkService checkLinkService;
-	
-	/**
-	 * Used to inject {@link CheckLinkService}.
-	 */
-	@Autowired
-	public void setCheckLinkService(CheckLinkService checkLinkService) {
-		this.checkLinkService = checkLinkService;
-	}
 
 	/**
 	 * <b>Don't call this manually!</b>
@@ -52,9 +42,7 @@ public class ScheduleService {
 				} catch (SchedulerException e) {
 					logger.error("Fail to initialize scheduler. Exception message: " + e.getMessage());
 				}
-				
-				//TODO initialize scheduler jobs
-//				scheduleCheckLinksOnPortalJob(scheduler);
+				//initialize jobs
 			}
 		}
 	}
@@ -77,26 +65,48 @@ public class ScheduleService {
 		}
 	}
 	
-	private void scheduleCheckLinksOnPortalJob(Scheduler scheduler) {
-		JobDataMap dataMap = new JobDataMap();
-		dataMap.put("service", checkLinkService); 
-		
-		JobDetail job = newJob(CheckLinksOnPortalJob.class)
-				.withIdentity("checkLinksOnPortalJob", "checkLinks")
-				.usingJobData(dataMap)
-				.build();
-		
-		Trigger trigger = newTrigger()
-				.withIdentity("checkLinksOnPortalTrigger", "checkLinks")
-				.startNow()
-				.withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(10).repeatForever())
-				.build();
-		
+	/**
+	 * 
+	 * @param jobClass
+	 * @return
+	 */
+	public boolean isJobExecuting(Class<? extends Job> jobClass) {
+		boolean result = false;
 		try {
-			scheduler.scheduleJob(job, trigger);
-			logger.info("Scheduled job " + CheckLinksOnPortalJob.class.getSimpleName());
+			List<JobExecutionContext> executionContexts = null;
+			synchronized (schedulerMutex) {
+				executionContexts = scheduler.getCurrentlyExecutingJobs();
+			}
+			for (JobExecutionContext context : executionContexts) {
+				if (context.getJobInstance().getClass() == jobClass) {
+					result = true;
+					break;
+				}
+			}
 		} catch (SchedulerException e) {
-			logger.error("Fail to schedule " + CheckLinksOnPortalJob.class.getSimpleName() + " job. Exception message: " + e.getMessage());
+			logger.error("Job execution status retrieve fail. Exception message: " + e.getMessage());
 		}
+		return result;
+	}
+	
+	/**
+	 * TODO
+	 * @param job
+	 * @param trigger
+	 */
+	public boolean scheduleJob(JobDetail job, Trigger trigger) {
+		boolean success = true;
+		try {
+			synchronized (schedulerMutex) {
+				if (scheduler != null) {
+					scheduler.scheduleJob(job, trigger);
+				}
+			}
+			logger.info("Scheduled job " + job.getKey());
+		} catch (SchedulerException e) {
+			success = false;
+			logger.error("Fail to schedule " + CheckLinksSchedulerJob.class.getSimpleName() + " job. Exception message: " + e.getMessage());
+		}
+		return success;
 	}
 }

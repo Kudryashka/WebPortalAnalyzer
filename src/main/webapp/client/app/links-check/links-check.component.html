@@ -1,20 +1,17 @@
 <div class="row" class="container-fluid">
 	<div class="container col-md-6">
-		<h2 class="page-header">Statistic panel</h2>
-	</div>
-	<div class="container col-md-6">
-		<h2 class="page-header">Controls panel</h2>
+		<h2 class="page-header">Панель управління</h2>
 		<div>
-			<button type="button" class="btn btn-primary btn-block" (click)="callCheckManually()">Call check immediately</button>
-			<button type="button" class="btn btn-default btn-block" (click)="disableCurrentActiveCheck()">Stop current check</button>
+			<button type="button" class="btn btn-primary btn-block" (click)="callCheckManually()">Запустити внепланову перевірку</button>
+			<button type="button" class="btn btn-default btn-block" (click)="disableCurrentActiveCheck()">Зупинити поточну перевірку</button>
 		</div>
 		<div>
 			<table class="table table-striped">
-				<caption>Scheduler rules</caption>
+				<caption>Правила планування</caption>
 				<thead>
-					<th>Rule</th>
-					<th>Active</th>
-					<th>Remove</th>
+					<th>Правило</th>
+					<th>Активне</th>
+					<th>Вилучити</th>
 				</thead>
 				<tbody>
 					<tr *ngFor="let rule of registeredRules">
@@ -28,7 +25,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<button type="button" class="btn btn-primary btn-block" (click)="schedulerRuleModal.show()">Add new rule</button>
+			<button type="button" class="btn btn-primary btn-block" (click)="schedulerRuleModal.show()">Додати нове правило</button>
 			<!-- Scheduler rule modal-->
 			<div class="modal fade" bsModal #schedulerRuleModal="bs-modal" [config]="{backdrop: 'static'}"
 			     tabindex="-1" role="dialog" aria-labelledby="schedulerRuleModalLabel" aria-hidden="true">
@@ -88,5 +85,9 @@
 			  </div>
 			</div>
 		</div>
+	</div>
+	<div class="container col-md-6">
+		<h2 class="page-header">Панель статистики</h2>
+		<p>Немає даних для відображення</p>
 	</div>
 </div>

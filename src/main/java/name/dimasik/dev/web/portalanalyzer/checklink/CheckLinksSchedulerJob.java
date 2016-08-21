@@ -1,12 +1,10 @@
-package name.dimasik.dev.web.portalanalyzer.schedule;
+package name.dimasik.dev.web.portalanalyzer.checklink;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkService;
 
 /**
  * 
@@ -16,9 +14,9 @@ import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkService;
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  *
  */
-public class CheckLinksOnPortalJob implements Job {
+public class CheckLinksSchedulerJob implements Job {
 
-	private static final Logger logger = LoggerFactory.getLogger(CheckLinksOnPortalJob.class);
+	private static final Logger logger = LoggerFactory.getLogger(CheckLinksSchedulerJob.class);
 	
 	private CheckLinkService service;
 	
@@ -33,11 +31,13 @@ public class CheckLinksOnPortalJob implements Job {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
-			service.checkLinksOnPortal();
+//			service.checkLinksOnPortal();
+			System.out.println("Execute job!!");
+			Thread.sleep(10000);
 			// TODO process result
 			logger.info("Check link service");
 		} catch (Exception e) {
-			logger.error("Error to process " + CheckLinksOnPortalJob.class.getSimpleName() 
+			logger.error("Error to process " + CheckLinksSchedulerJob.class.getSimpleName() 
 					+ ". Exception message: " + e.getMessage());
 		}
 	}

@@ -13,7 +13,7 @@ import {SearchComponent} from './search/search.component';
 const routes: RouterConfig = [
 	{
 		path: '',
-		redirectTo: '/dashboard',
+		redirectTo: '/links',
 		pathMatch: 'full'
 	},
 	{

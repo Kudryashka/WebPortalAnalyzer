@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class SettingsController {
 	
+	//TODO add setting -> a register of emptySearch queries 
+	
 	private static final Logger logger = LoggerFactory.getLogger(SettingsController.class);
 
 	@GetMapping
@@ -37,6 +39,4 @@ public class SettingsController {
 	public void updateSettings() {
 		logger.info("Request to update settings.");
 	}
-	
-	//register of emptySearch queries
 }

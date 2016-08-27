@@ -18,23 +18,44 @@ public class QueryCountPair {
 	@JsonView(EmptySearchReportView.class)
 	private int count;
 	
+	/**
+	 * TODO
+	 * @param query
+	 */
 	public QueryCountPair(String query) {
 		this(query, 1);
 	}
 	
+	/**
+	 * TODO
+	 * @param query
+	 * @param count
+	 */
 	public QueryCountPair(String query, int count) {
 		this.query = query;
 		this.count = count;
 	}
 
+	/**
+	 * TODO
+	 * @return
+	 */
 	public int getCount() {
 		return count;
 	}
 
+	/**
+	 * TODO
+	 * @param count
+	 */
 	public void setCount(int count) {
 		this.count = count;
 	}
 
+	/**
+	 * TODO
+	 * @return
+	 */
 	public String getQuery() {
 		return query;
 	}

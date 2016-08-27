@@ -28,9 +28,9 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-import name.dimasik.dev.web.portalanalyzer.prefs.Preference;
-import name.dimasik.dev.web.portalanalyzer.prefs.PreferencesProvider;
 import name.dimasik.dev.web.portalanalyzer.schedule.ScheduleService;
+import name.dimasik.dev.web.portalanalyzer.settings.Preference;
+import name.dimasik.dev.web.portalanalyzer.settings.SettingsProvider;
 
 import static name.dimasik.dev.web.portalanalyzer.checklink.LinkType.*;
 import static org.quartz.JobBuilder.newJob;
@@ -52,7 +52,7 @@ public class CheckLinkService {
 	}
 	
 	private WebClient webClient;
-	private PreferencesProvider prefsProvider;
+	private SettingsProvider prefsProvider;
 	private ScheduleService scheduler;
 	private JobDetail jobDetail;
 	private Trigger nowTrigger;
@@ -88,10 +88,10 @@ public class CheckLinkService {
 	}
 	
 	/**
-	 * Used to inject {@link PreferencesProvider}.
+	 * Used to inject {@link SettingsProvider}.
 	 */
 	@Autowired
-	public void setPreferencesProvider(PreferencesProvider prefsProvider) {
+	public void setPreferencesProvider(SettingsProvider prefsProvider) {
 		this.prefsProvider = prefsProvider;
 	}
 	

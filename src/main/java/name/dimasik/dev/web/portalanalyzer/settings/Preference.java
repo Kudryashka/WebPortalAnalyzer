@@ -1,4 +1,4 @@
-package name.dimasik.dev.web.portalanalyzer.prefs;
+package name.dimasik.dev.web.portalanalyzer.settings;
 
 /**
  * Represents a list of possible application preferences and their value types.

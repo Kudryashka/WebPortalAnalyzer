@@ -1,4 +1,4 @@
-package name.dimasik.dev.web.portalanalyzer.prefs;
+package name.dimasik.dev.web.portalanalyzer.settings;
 
 /**
  * Indicates about preference with an illegal type.

@@ -44,13 +44,13 @@
 				<beans:prop key="hibernate.connection.useUnicode">true</beans:prop>
 			</beans:props>
 		</beans:property>
-		 <!-- 
 		<beans:property name="annotatedClasses">
 			<beans:list>
-				<beans:value>...</beans:value>
+				<beans:value>name.dimasik.dev.web.portalanalyzer.search.PersistentQueryObject</beans:value>
+				<beans:value>name.dimasik.dev.web.portalanalyzer.userinfo.PersistentUserInfo</beans:value>
+				<beans:value>name.dimasik.dev.web.portalanalyzer.settings.Setting</beans:value>
 			</beans:list>
 		</beans:property>
-		  -->
 	</beans:bean>
 	
 	<beans:bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">

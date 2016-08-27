@@ -1,10 +1,11 @@
-package name.dimasik.dev.web.portalanalyzer.prefs;
+package name.dimasik.dev.web.portalanalyzer.settings;
 
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import name.dimasik.dev.web.portalanalyzer.prefs.Preference.Type;
+import name.dimasik.dev.web.portalanalyzer.settings.Preference.Type;
 
 /**
  * Provider of application preferences.
@@ -12,8 +13,19 @@ import name.dimasik.dev.web.portalanalyzer.prefs.Preference.Type;
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  */
 @Service
-public class PreferencesProvider {
+public class SettingsProvider {
 	
+	private SettingsDAO dao;
+	
+	/**
+	 * TODO
+	 * @param dao
+	 */
+	@Autowired
+	public void setDao(SettingsDAO dao) {
+		this.dao = dao;
+	}
+
 	/**
 	 * TODO temporary
 	 */

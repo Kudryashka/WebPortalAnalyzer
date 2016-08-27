@@ -13,12 +13,13 @@ import name.dimasik.dev.web.portalanalyzer.util.Pair;
 
 /**
  * TODO add description
+ * TODO REMOVE IT
  *
  * @author Dmytro Kudria
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  *
  */
-@Component
+@Component("SearchQueryInMemoryDAO")
 public class SearchQueryInMemoryDAO implements SearchQueriesDAO {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SearchQueryInMemoryDAO.class);

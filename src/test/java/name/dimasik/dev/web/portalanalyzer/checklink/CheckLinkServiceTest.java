@@ -13,8 +13,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import name.dimasik.dev.web.portalanalyzer.prefs.Preference;
-import name.dimasik.dev.web.portalanalyzer.prefs.PreferencesProvider;
+import name.dimasik.dev.web.portalanalyzer.settings.Preference;
+import name.dimasik.dev.web.portalanalyzer.settings.SettingsProvider;
 
 /**
  * Tests for {@link CheckLinkService} 
@@ -36,7 +36,7 @@ public class CheckLinkServiceTest {
 	@BeforeClass
 	public static void init() {
 		mService = new CheckLinkService();
-		mService.setPreferencesProvider(new PreferencesProvider() {
+		mService.setPreferencesProvider(new SettingsProvider() {
 			@Override
 			public String getStringPreference(Preference pref) {
 				switch(pref) {

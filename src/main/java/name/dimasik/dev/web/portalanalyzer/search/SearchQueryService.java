@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +28,21 @@ public class SearchQueryService {
 
 	private SearchQueriesDAO dao;
 	
+	/**
+	 * TODO
+	 * @param dao
+	 */
 	@Autowired
+	@Qualifier("SearchQueryPersistentDAO")
 	public void setDao(SearchQueriesDAO dao) {
+		logger.info("DAO initialized. Class : " + dao.getClass().getSimpleName());
 		this.dao = dao;
 	}
 
 	/**
 	 * TODO
 	 */
-//	@Transactional
+	@Transactional
 	public List<QueryCountPair> getQueries(int days) {
 		List<Pair<String, Date>> queries = dao.getSearchQueries(days);
 		List<QueryCountPair> result = new ArrayList<>();
@@ -62,7 +69,7 @@ public class SearchQueryService {
 	/**
 	 * TODO
 	 */
-//	@Transactional
+	@Transactional
 	public void registerQuery(String query) {
 		dao.addSearchQuery(query, new Date());
 	}

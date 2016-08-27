@@ -3,23 +3,23 @@ package name.dimasik.name.dev.web.portalanalyzer.prefs;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import name.dimasik.dev.web.portalanalyzer.prefs.IllegalPreferenceTypeException;
-import name.dimasik.dev.web.portalanalyzer.prefs.Preference;
-import name.dimasik.dev.web.portalanalyzer.prefs.Preference.Type;
-import name.dimasik.dev.web.portalanalyzer.prefs.PreferencesProvider;
+import name.dimasik.dev.web.portalanalyzer.settings.IllegalPreferenceTypeException;
+import name.dimasik.dev.web.portalanalyzer.settings.Preference;
+import name.dimasik.dev.web.portalanalyzer.settings.SettingsProvider;
+import name.dimasik.dev.web.portalanalyzer.settings.Preference.Type;
 
 /**
- * Tests for {@link PreferencesProvider}
+ * Tests for {@link SettingsProvider}
  * @author Dmytro Kudria
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  */
 public class PreferencesProviderTest {
 	
-	private static PreferencesProvider testProvider;
+	private static SettingsProvider testProvider;
 	
 	@BeforeClass
 	public static void init() {
-		testProvider = new PreferencesProvider();
+		testProvider = new SettingsProvider();
 	}
 
 	/**

@@ -30,12 +30,11 @@
 	<context:component-scan base-package="name.dimasik.dev.web.portalanalyzer" />
 	
 	<!-- ORM -->
-	<!--
 	<beans:bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<beans:property name="jndiName" value="java:comp/env/jdbc/portal_analyzer_db"></beans:property>
 	</beans:bean>
 	
-	<beans:bean id="hibernateSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<beans:bean id="hibernateSessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<beans:property name="dataSource" ref="dataSource"></beans:property>
 		<beans:property name="hibernateProperties">
 			<beans:props>
@@ -45,19 +44,19 @@
 				<beans:prop key="hibernate.connection.useUnicode">true</beans:prop>
 			</beans:props>
 		</beans:property>
-		 
+		 <!-- 
 		<beans:property name="annotatedClasses">
 			<beans:list>
 				<beans:value>...</beans:value>
 			</beans:list>
 		</beans:property>
-		 
+		  -->
 	</beans:bean>
 	
-	<beans:bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<beans:bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<beans:property name="sessionFactory" ref="hibernateSessionFactory"></beans:property>
 	</beans:bean>
-	-->
+	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
 </beans:beans>

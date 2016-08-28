@@ -75,7 +75,7 @@ public class EmptySearchController {
 		}
 		
 		String json = mapper
-						.writerWithView(EmptySearchReportView.class)
+						.writerWithView(EmptySearchView.class)
 						.writeValueAsString(searchQueryService.getQueries(daysCount));
 		return ResponseEntity.ok(json);
 	}

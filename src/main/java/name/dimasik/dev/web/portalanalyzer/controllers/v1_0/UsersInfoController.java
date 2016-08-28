@@ -73,7 +73,7 @@ public class UsersInfoController {
 		
 		String json = mapper
 				.writerWithView(UsersInfoView.class)
-				.writeValueAsString(userInfoService.getUsersInfos(daysCount));
+				.writeValueAsString(userInfoService.getReport(daysCount));
 		return ResponseEntity.ok().body(json);
 	}
 	

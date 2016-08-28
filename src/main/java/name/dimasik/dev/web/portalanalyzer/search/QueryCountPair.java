@@ -2,7 +2,7 @@ package name.dimasik.dev.web.portalanalyzer.search;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.EmptySearchReportView;
+import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.EmptySearchView;
 
 /**
  * TODO add description
@@ -13,9 +13,9 @@ import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.EmptySearchReportVie
  */
 public class QueryCountPair {
 
-	@JsonView(EmptySearchReportView.class)
+	@JsonView(EmptySearchView.class)
 	private final String query;
-	@JsonView(EmptySearchReportView.class)
+	@JsonView(EmptySearchView.class)
 	private int count;
 	
 	/**

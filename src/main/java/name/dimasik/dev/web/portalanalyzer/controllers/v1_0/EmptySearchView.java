@@ -7,6 +7,6 @@ package name.dimasik.dev.web.portalanalyzer.controllers.v1_0;
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  *
  */
-public interface EmptySearchReportView {
+public interface EmptySearchView {
 
 }

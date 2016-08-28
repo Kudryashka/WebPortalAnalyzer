@@ -98,4 +98,12 @@ public class UserInfoService {
 	public List<UserRequestInfo> getUsersInfos(int days) {
 		return userInfoDAO.getUsersInfos(days);
 	}
+	
+	@Transactional
+	public UserInfoReport getReport(int days) {
+		//TODO
+		return new UserInfoReport(getUsersInfos(days));
+	}
+	
+	
 }

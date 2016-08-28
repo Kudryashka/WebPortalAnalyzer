@@ -10,48 +10,12 @@ export class SearchService {
 
 	constructor(private http: Http) {}
 
-	//tmp
-	tenDaysArray: QueryCountPair[] = [
-		{
-			query: "безкоштовний адвокат",
-			count: 3
-		},
-		{
-			query: "потрібна допомога",
-			count: 1
-		}
-	]
-	thirtyDaysArray: QueryCountPair[] = [
-		{
-			query: "безкоштовний адвокат",
-			count: 23
-		},
-		{
-			query: "помощь юриста бесплатно",
-			count: 15
-		},
-		{
-			query: "безкоштовна допомога обвинувачувачу",
-			count: 7
-		},
-		{
-			query: "що таке кримінальна відповідальність",
-			count: 3
-		},
-		{
-			query: "потрібна допомога",
-			count: 1
-		}
-	]
-
 	requestTenDaysQueries() {
-		return Promise.resolve(this.tenDaysArray);
-		// return this.getQueries(10);
+		return this.getQueries(10);
 	}
 
 	requestThirtyDaysQueries() {
-		return Promise.resolve(this.thirtyDaysArray);
-		// return this.getQueries(30);
+		return this.getQueries(30);
 	}
 
 	private getQueries(days: number) {

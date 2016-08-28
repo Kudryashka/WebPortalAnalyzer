@@ -39,8 +39,34 @@
 	</div>
 	<div class="container col-md-6">
 		<h2 class="page-header">Геостатистика за 30 днів</h2>
-		<div>
+		<sebm-google-map [latitude]="mapStartLatitude" [longitude]="mapStartLongitude">
+  			<sebm-google-map-marker *ngFor="let marker of mapMarkers" 
+  				[label]="marker.label" [latitude]="marker.latitude" [longitude]="marker.longitude">		
+  			</sebm-google-map-marker>
+		</sebm-google-map>
+		<div *ngIf="report">
 			<h3>Геостатистичні дані</h3>
+			<table class="table table-striped" *ngIf="report.geolocations.length > 0">
+				<thead>
+					<th>Місто</th>
+					<th>Регіон</th>
+					<th>Країна</th>
+					<th>Широта</th>
+					<th>Довгота</th>
+					<th>Кількість запитів</th>
+				</thead>
+				<tbody>
+					<tr *ngFor="let location of report.geolocations">
+						<td>{{location.city}}</td>
+						<td>{{location.region}}</td>
+						<td>{{location.country}}</td>
+						<td>{{location.latitude}}</td>
+						<td>{{location.longitude}}</td>
+						<td>{{location.requestsCount}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<p *ngIf="report.geolocations.length == 0">Немає даних для відображення</p>
 		</div>
 	</div>
 </div>

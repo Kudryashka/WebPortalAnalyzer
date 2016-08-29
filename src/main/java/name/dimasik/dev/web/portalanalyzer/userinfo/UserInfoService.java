@@ -13,6 +13,7 @@ import org.springframework.mobile.device.DevicePlatform;
 import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * TODO add description
@@ -53,6 +54,7 @@ public class UserInfoService {
 	 * TODO
 	 * @param request
 	 */
+	@Transactional
 	public void processRawUserRequest(HttpServletRequest request) {
 		logger.info("processRawUserRequest()");
 		
@@ -77,7 +79,43 @@ public class UserInfoService {
 		}
 		logger.debug("User IP address: " + ipAddress);
 		
-		//TODO determine location
+		RestTemplate restTemplate = new RestTemplate();
+		RestServiceIpInfoResult ipInfoRestResult = restTemplate.getForObject("http://ipinfo.io/{ip}/json"
+				, RestServiceIpInfoResult.class, ipAddress);
+		
+		if (ipInfoRestResult.loc == null) {
+			logger.error("Received location from REST service is null! IP: " + ipAddress);
+			return;
+		}
+		
+		String[] locSplit = ipInfoRestResult.loc.split(",");
+		if (locSplit.length != 2) {
+			logger.error("Received location from REST service is incorrect! Location: " + ipInfoRestResult.loc + " IP: " + ipAddress);
+			return;
+		}
+		
+		Double latitude = null;
+		Double longitude = null;
+		
+		try {
+			latitude = Double.valueOf(locSplit[0].trim());
+			longitude = Double.valueOf(locSplit[1].trim());
+		} catch (NumberFormatException e) {
+			logger.error("Received location from REST service is incorrect! Location: " + ipInfoRestResult.loc + " IP: " + ipAddress);
+			latitude = longitude = null;
+		}
+		
+		UserRequestInfo info = new UserRequestInfo();
+		info.setIp(ipAddress);
+		info.setDeviceType(deviceType.name());
+		info.setDevicePlatform(devicePlatform.name());
+		info.setLatitude(latitude);
+		info.setLongitude(longitude);
+		info.setCity(ipInfoRestResult.city);
+		info.setRegion(ipInfoRestResult.region);
+		info.setCountry(ipInfoRestResult.country);
+		
+		registerUserInfo(info);
 	}
 	
 	/**
@@ -105,5 +143,49 @@ public class UserInfoService {
 		return new UserInfoReport(getUsersInfos(days));
 	}
 	
-	
+	/**
+	 * TODO add description
+	 *
+	 * @author Dmytro Kudria
+	 * @author <a href="http://dimasik.name">http://dimasik.name</a>
+	 *
+	 */
+	private static class RestServiceIpInfoResult {
+		
+		private String ip;
+		private String city;
+		private String region;
+		private String country;
+		private String loc;
+		public String getIp() {
+			return ip;
+		}
+		public void setIp(String ip) {
+			this.ip = ip;
+		}
+		public String getCity() {
+			return city;
+		}
+		public void setCity(String city) {
+			this.city = city;
+		}
+		public String getRegion() {
+			return region;
+		}
+		public void setRegion(String region) {
+			this.region = region;
+		}
+		public String getCountry() {
+			return country;
+		}
+		public void setCountry(String country) {
+			this.country = country;
+		}
+		public String getLoc() {
+			return loc;
+		}
+		public void setLoc(String loc) {
+			this.loc = loc;
+		}
+	}
 }

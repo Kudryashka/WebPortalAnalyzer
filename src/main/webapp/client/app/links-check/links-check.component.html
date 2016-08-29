@@ -88,6 +88,52 @@
 	</div>
 	<div class="container col-md-6">
 		<h2 class="page-header">Панель статистики</h2>
-		<p>Немає даних для відображення</p>
+		<div *ngIf="report">
+			<h3>Загальний підсумок</h3>
+			<table class="table table-striped">
+				<tbody>
+					<tr>
+						<td>Кількість перевірок за період</td>
+						<td>{{report.summary.checkCount}}</td>
+					</tr>
+					<tr>
+						<td>Кількість успішних посилань</td>
+						<td>{{report.summary.okLinksCount}}</td>
+					</tr>
+					<tr>
+						<td>Кількість помилкових посилань</td>
+						<td>{{report.summary.errorLinksCount}}</td>
+					</tr>
+					<tr>
+						<td>Кількість недоступних посилань</td>
+						<td>{{report.summary.unreachableLinksCount}}</td>
+					</tr>
+					<tr>
+						<td>Кількість посилань з перенаправленням</td>
+						<td>{{report.summary.redirectLinksCount}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="report">
+			<h3>Детальна інформація</h3>
+			<table class="table table-striped" *ngFor="let detail of report.details">
+				<caption>{{detail.date}}</caption>
+				<thead>
+					<th>Тип посилання</th>
+					<th>Адреса посилання</th>
+					<th>Розміщення посилання</th>
+					<th>Код відгуку</th>
+				</thead>
+				<tbody>
+					<tr *ngFor="let link of detail.okLinks">
+						<td>{{link.type}}</td>
+						<td>{{link.target}}</td>
+						<td>{{link.location}}</td>
+						<td>{{link.responseCode}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>

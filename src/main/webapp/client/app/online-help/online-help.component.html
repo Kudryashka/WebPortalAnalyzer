@@ -35,6 +35,50 @@
 	</div>
 	<div class="container col-md-6">
 		<h2 class="page-header">Панель статистики</h2>
-		<p>Немає даних для відображення</p>
+		<div *ngIf="report">
+			<h3>Загальний підсумок</h3>
+			<table class="table table-striped">
+				<tbody>
+					<tr>
+						<td>Кількість перевірок за період</td>
+						<td>{{report.summary.checkCount}}</td>
+					</tr>
+					<tr>
+						<td>Кількість виявлення допомоги онлайн</td>
+						<td>{{report.summary.availableOnline}}</td>
+					</tr>
+					<tr>
+						<td>Кількість виявлення допомоги оффлайн</td>
+						<td>{{report.summary.availableOffline}}</td>
+					</tr>
+					<tr>
+						<td>Кількість невиявлення жодної допомоги</td>
+						<td>{{report.summary.unavailable}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="report">
+			<h3>Детальна інформація</h3>
+			<table class="table table-striped">
+				<thead>
+					<th>Дата перевірки</th>
+					<th>Чи доступна допомога онлайн</th>
+					<th>Чи доступна допомога оффлайн</th>
+				</thead>
+				<tbody>
+					<tr *ngFor="let detail of report.details">
+						<td>{{detail.date}}</td>
+						<td>
+							<span *ngIf="detail.isOnlineAvailable">ТАК</span>
+							<span *ngIf="!detail.isOnlineAvailable">НІ</span>
+						<td>
+							<span *ngIf="detail.isOfflineAvailable">ТАК</span>
+							<span *ngIf="!detail.isOfflineAvailable">НІ</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>

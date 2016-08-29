@@ -10,6 +10,8 @@ import {DayOfWeek} from '../schedule/day-of-week';
 import {DAYS_OF_WEEK} from '../schedule/days-of-week';
 import {Rule} from '../schedule/rule';
 import {SchedulerService} from '../schedule/scheduler-service';
+import {LinksCheckService} from './links-check.service';
+import {LinksCheckReport} from './links-check-report';
 
 @Component({
 	selector: 'links-check',
@@ -26,7 +28,53 @@ export class LinksCheckComponent implements OnInit {
 
 	registeredRules: Rule[];
 
-	constructor(private schedulerService: SchedulerService) {}
+	//fake temporary
+	report: LinksCheckReport = {
+		summary: {
+			checkCount: 1,
+			okLinksCount: 3,
+			errorLinksCount: 0,
+			unreachableLinksCount: 0,
+			redirectLinksCount: 0
+		},
+		details: [
+			{
+				date: "17:13 28/08/2016",
+				summary: {
+					okLinksCount: 3,
+                	errorLinksCount: 0,
+                	unreachableLinksCount: 0,
+                	redirectLinksCount: 0
+				},
+				okLinks: [
+					{
+						type: "ANCHOR",
+						location: "",
+						target: "http://dimasik.name",
+						responseCode: 200
+					},
+					{
+						type: "ANCHOR",
+						location: "http://dimasik.name",
+						target: "http://dimasik.name/mail",
+						responseCode: 200
+					},
+					{
+						type: "ANCHOR",
+						location: "http://dimasik.name",
+						target: "http://dimasik.name/job",
+						responseCode: 200
+					}
+				],
+				errorLinks: [],
+				unreachableLinks: [],
+				redirectLinks: []
+			}
+		]
+	} 
+
+	constructor(private schedulerService: SchedulerService, 
+		private linksCheckService: LinksCheckService) {}
 
 	ngOnInit() {
 		this.ruleTypes = RULE_TYPES;
@@ -49,10 +97,12 @@ export class LinksCheckComponent implements OnInit {
 
 	callCheckManually() {
 		console.log("call check manually");
+		this.linksCheckService.executeRun();
 	}
 
 	disableCurrentActiveCheck() {
 		console.log("disable current active check");
+		this.linksCheckService.executeStop();
 	}
 
 	humanReadableRule(rule: Rule): string {

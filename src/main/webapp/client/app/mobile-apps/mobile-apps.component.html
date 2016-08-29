@@ -40,6 +40,20 @@
 	</div>
 	<div class="container col-md-6">
 		<h2 class="page-header">Панель статистики</h2>
-		<p>Немає даних для відображення</p>
+		<div *ngIf="report">
+			<h3>Загальний підсумок</h3>
+			<table class="table table-striped">
+				<tbody>
+					<tr>
+						<td>Кількість перевірок за період</td>
+						<td>{{report.summary.checkCount}}</td>
+					</tr>
+					<tr>
+						<td>Кількість провалених перевірок</td>
+						<td>{{report.summary.failedCheckCount}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>

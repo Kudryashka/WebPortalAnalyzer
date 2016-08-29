@@ -4,6 +4,8 @@ import {ROUTER_DIRECTIVES} from '@angular/router';
 import {SchedulerService} from './schedule/scheduler-service';
 import {SearchService} from './search/search.service';
 import {UsersInfoService} from './users-info/users-info.service';
+import {LinksCheckService} from './links-check/links-check.service';
+
 
 
 
@@ -12,7 +14,8 @@ import {UsersInfoService} from './users-info/users-info.service';
 	templateUrl: 'app/app.component.html',
 	styleUrls: ['app/app.component.css'],
 	directives: [ROUTER_DIRECTIVES],
-	providers: [SchedulerService, SearchService, UsersInfoService]})
+	providers: [SchedulerService, SearchService, 
+		UsersInfoService, LinksCheckService]})
 export class AppComponent {
 	title = 'WebPortalAnalyzer';
 	description = 'Тонкий клієнт для аплікації';

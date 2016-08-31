@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -21,12 +23,16 @@ import org.springframework.util.StringUtils;
  *
  */
 public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+	
+	private static Logger logger = LoggerFactory.getLogger(RestAuthenticationSuccessHandler.class);
 
 	private RequestCache requestCache = new HttpSessionRequestCache();
 	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
+		logger.info("Authentication success!");
+		allowCors(response);
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		if (savedRequest == null) {
 			clearAuthenticationAttributes(request);
@@ -41,5 +47,14 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 			 
 			clearAuthenticationAttributes(request);
 		}
+	}
+	
+	private static void allowCors(HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+	    response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+	    response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
+	    response.setHeader("Access-Control-Allow-Headers", "*");
+	    response.setHeader("Access-Control-Max-Age", "3600");
 	}
 }

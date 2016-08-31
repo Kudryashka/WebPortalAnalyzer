@@ -1,5 +1,6 @@
 import {provideRouter, RouterConfig} from '@angular/router';
 
+import {AuthenticationComponent} from './authentication/authentication.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {LinksCheckComponent} from './links-check/links-check.component';
 import {UsersInfoComponent} from './users-info/users-info.component';
@@ -13,8 +14,12 @@ import {SearchComponent} from './search/search.component';
 const routes: RouterConfig = [
 	{
 		path: '',
-		redirectTo: '/links',
+		redirectTo: '/login',
 		pathMatch: 'full'
+	},
+	{
+		path: 'login',
+		component: AuthenticationComponent
 	},
 	{
 		path: 'dashboard',

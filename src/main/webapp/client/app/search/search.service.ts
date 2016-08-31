@@ -20,7 +20,7 @@ export class SearchService {
 
 	private getQueries(days: number) {
 		let url = `${REST_SEARCH_URL}${days}`; 
-		return this.http.get(url).toPromise()
+		return this.http.get(url, {withCredentials: true}).toPromise()
 			.then(queries => queries.json() as QueryCountPair[])
 			.catch(this.handleError);
 	}

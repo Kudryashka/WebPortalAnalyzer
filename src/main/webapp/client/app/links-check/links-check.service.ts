@@ -9,6 +9,7 @@ import {
 } from '../config/config';
 
 import {LinksCheckReport} from './links-check-report';
+import {AuthenticationService} from '../authentication/authentication.service';
 
 @Injectable()
 export class LinksCheckService {
@@ -59,13 +60,16 @@ export class LinksCheckService {
 		]
 	} 
 
-	constructor(private http: Http){
+	constructor(private http: Http, private authenticationService: AuthenticationService){
 		this.headers = new Headers();
 		this.headers.append('Content-Type', 'application/json');
+		this.headers.append('Cookie', authenticationService.getCookies())
 	}
 
 	public executeRun() {
-		this.http.put(REST_LINKS_CHECK_RUN_URL, JSON.stringify(""), {headers: this.headers}).subscribe();
+		this.http.put(REST_LINKS_CHECK_RUN_URL, JSON.stringify(""), 
+			{headers: this.headers, withCredentials: true})
+			.subscribe();
 	}
 
 	public executeStop() {

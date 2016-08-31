@@ -17,7 +17,7 @@ export class UsersInfoService {
 
 	private getUsersInfo(days: number) {
 		let url = `${REST_USER_INFO_URL}${days}`;
-		return this.http.get(url).toPromise()
+		return this.http.get(url, {withCredentials: true}).toPromise()
 			.then(infos => infos.json() as UsersInfoReport)
 			.catch(this.handleError);
 

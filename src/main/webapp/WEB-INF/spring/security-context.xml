@@ -14,7 +14,7 @@
 		<sec:csrf disabled="true"/>
 		<sec:intercept-url pattern="/api/login" access="permitAll"/>
 		<sec:intercept-url pattern="/api/logout" access="permitAll"/>
-		<sec:intercept-url pattern="/api/**" access="hasRole('ROLE_ADMIN')"/>
+		<sec:intercept-url pattern="/api/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_VISITOR')"/>
 		<sec:form-login
 			login-processing-url="/api/login"
 			username-parameter="username"
@@ -29,6 +29,7 @@
 		<sec:authentication-provider>
 			<sec:user-service>
 				<sec:user name="admin" password="admin" authorities="ROLE_ADMIN"/>
+				<sec:user name="Visitor" password="visitor" authorities="ROLE_VISITOR"/>
 			</sec:user-service>
 		</sec:authentication-provider>
 	</sec:authentication-manager>

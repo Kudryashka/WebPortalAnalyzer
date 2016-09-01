@@ -13,6 +13,10 @@ import {AuthenticationService} from './authentication.service';
   		margin-bottom: 80px;
 	}
 
+	.fail-msg {
+		color: red;
+	}
+
 	.form-signin {
   		max-width: 380px;
   		padding: 15px 35px 45px;
@@ -53,12 +57,27 @@ export class AuthenticationComponent {
 	username: string;
 	password: string;
 
+	fail: boolean;
+
 	constructor(private authenticationService: AuthenticationService,
 		private router: Router) {}
 
 	doLogin() {
 		console.log("Name: " + this.username + " pass: " + this.password);
-		this.authenticationService.login(this.username, this.password);
-		// this.router.navigateByUrl("/links");
+		this.authenticationService.login(this.username, this.password)
+				.subscribe(
+					data => this.onSuccessLogin(),
+					error => this.onFailLogin(error)
+				);
+	}
+
+	onSuccessLogin() {
+		this.authenticationService.setIsAuthorized(true);
+		this.router.navigateByUrl("/links");
+	}
+
+	onFailLogin(error: any) {
+		console.log(error);
+		this.fail = true;
 	}
 }

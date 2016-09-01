@@ -1,5 +1,10 @@
 package name.dimasik.dev.web.portalanalyzer.checklink;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
+import java.util.List;
+
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -31,14 +36,18 @@ public class CheckLinksSchedulerJob implements Job {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
-//			service.checkLinksOnPortal();
-			System.out.println("Execute job!!");
-			Thread.sleep(10000);
-			// TODO process result
-			logger.info("Check link service");
+			logger.info("Start execution of check link service job");
+			Date date = new Date();
+			List<LinkInfo> result = service.checkLinksOnPortal();
+			logger.info("Links infos collected. Start saving process.");
+			service.saveCheckLinksResult(date, result);
+			logger.info("Execution of check link service job finished");
 		} catch (Exception e) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
 			logger.error("Error to process " + CheckLinksSchedulerJob.class.getSimpleName() 
-					+ ". Exception message: " + e.getMessage());
+					+ ". Exception message: " + e.getMessage() + ". Stacktrace: " + sw.toString());
 		}
 	}
 }

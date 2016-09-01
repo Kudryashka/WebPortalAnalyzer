@@ -14,7 +14,8 @@
 		<sec:csrf disabled="true"/>
 		<sec:intercept-url pattern="/api/login" access="permitAll"/>
 		<sec:intercept-url pattern="/api/logout" access="permitAll"/>
-		<sec:intercept-url pattern="/api/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_VISITOR')"/>
+		<sec:intercept-url pattern="/api/v1.0/portalEmptySearch/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_VISITOR')"/>
+		<sec:intercept-url pattern="/api/v1.0/portalUsersInfo/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_VISITOR')"/>
 		<sec:form-login
 			login-processing-url="/api/login"
 			username-parameter="username"

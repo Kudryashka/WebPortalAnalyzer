@@ -98,42 +98,68 @@
 					</tr>
 					<tr>
 						<td>Кількість успішних посилань</td>
-						<td>{{report.summary.okLinksCount}}</td>
+						<td style="color:green;">{{report.summary.okLinksCount}}</td>
 					</tr>
 					<tr>
 						<td>Кількість помилкових посилань</td>
-						<td>{{report.summary.errorLinksCount}}</td>
+						<td style="color:red;">{{report.summary.errorLinksCount}}</td>
 					</tr>
 					<tr>
 						<td>Кількість недоступних посилань</td>
-						<td>{{report.summary.unreachableLinksCount}}</td>
+						<td style="color:red;">{{report.summary.unreachableLinksCount}}</td>
 					</tr>
 					<tr>
 						<td>Кількість посилань з перенаправленням</td>
-						<td>{{report.summary.redirectLinksCount}}</td>
+						<td style="color:blue;">{{report.summary.redirectLinksCount}}</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 		<div *ngIf="report">
 			<h3>Детальна інформація</h3>
-			<table class="table table-striped" *ngFor="let detail of report.details">
-				<caption>{{detail.date}}</caption>
-				<thead>
-					<th>Тип посилання</th>
-					<th>Адреса посилання</th>
-					<th>Розміщення посилання</th>
-					<th>Код відгуку</th>
-				</thead>
-				<tbody>
-					<tr *ngFor="let link of detail.okLinks">
-						<td>{{link.type}}</td>
-						<td>{{link.target}}</td>
-						<td>{{link.location}}</td>
-						<td>{{link.responseCode}}</td>
-					</tr>
-				</tbody>
-			</table>
+			<div *ngIf="(report.details) && (report.details.length > 0)">
+				<table  class="table table-striped" *ngFor="let detail of report.details">
+					<caption>{{detail.date}}</caption>
+					<thead>
+						<th>Код відгуку</th>
+						<th>Тип посилання</th>
+						<th>Адреса посилання</th>
+						<th>Розміщення посилання</th>
+						<th>Адреса переадресації</th>
+					</thead>
+					<tbody>
+						<tr *ngFor="let link of detail.unreachableLinks">
+							<td style="color:red;">Відсутній</td>
+							<td>{{link.type}}</td>
+							<td>{{link.target}}</td>
+							<td>{{link.location}}</td>
+							<td>-</td>
+						</tr>
+						<tr *ngFor="let link of detail.errorLinks">
+							<td style="color:red;">{{link.responseCode}}</td>
+							<td>{{link.type}}</td>
+							<td>{{link.target}}</td>
+							<td>{{link.location}}</td>
+							<td>-</td>
+						</tr>
+						<tr *ngFor="let link of detail.redirectLinks">
+							<td style="color:blue;">{{link.responseCode}}</td>
+							<td>{{link.type}}</td>
+							<td>{{link.target}}</td>
+							<td>{{link.location}}</td>
+							<td>{{link.redirectUrl}}</td>
+						</tr>
+						<tr *ngFor="let link of detail.okLinks">
+							<td style="color:green;">{{link.responseCode}}</td>
+							<td>{{link.type}}</td>
+							<td>{{link.target}}</td>
+							<td>{{link.location}}</td>
+							<td>-</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p *ngIf="(!report.details) || (report.details == 0)">Немає даних для відображення</p>
 		</div>
 	</div>
 </div>

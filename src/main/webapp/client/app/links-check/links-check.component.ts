@@ -12,6 +12,7 @@ import {Rule} from '../schedule/rule';
 import {SchedulerService} from '../schedule/scheduler-service';
 import {LinksCheckService} from './links-check.service';
 import {LinksCheckReport} from './links-check-report';
+import {AuthenticationService} from '../authentication/authentication.service';
 
 @Component({
 	selector: 'links-check',
@@ -28,55 +29,23 @@ export class LinksCheckComponent implements OnInit {
 
 	registeredRules: Rule[];
 
-	//fake temporary
 	report: LinksCheckReport = {
 		summary: {
-			checkCount: 1,
-			okLinksCount: 3,
+			checkCount: 0,
+			okLinksCount: 0,
 			errorLinksCount: 0,
 			unreachableLinksCount: 0,
 			redirectLinksCount: 0
 		},
-		details: [
-			{
-				date: "17:13 28/08/2016",
-				summary: {
-					okLinksCount: 3,
-                	errorLinksCount: 0,
-                	unreachableLinksCount: 0,
-                	redirectLinksCount: 0
-				},
-				okLinks: [
-					{
-						type: "ANCHOR",
-						location: "",
-						target: "http://dimasik.name",
-						responseCode: 200
-					},
-					{
-						type: "ANCHOR",
-						location: "http://dimasik.name",
-						target: "http://dimasik.name/mail",
-						responseCode: 200
-					},
-					{
-						type: "ANCHOR",
-						location: "http://dimasik.name",
-						target: "http://dimasik.name/job",
-						responseCode: 200
-					}
-				],
-				errorLinks: [],
-				unreachableLinks: [],
-				redirectLinks: []
-			}
-		]
-	} 
+		details: []
+	}
 
 	constructor(private schedulerService: SchedulerService, 
-		private linksCheckService: LinksCheckService) {}
+		private linksCheckService: LinksCheckService, private authenticationService: AuthenticationService) {}
 
 	ngOnInit() {
+		this.authenticationService.checkAuthorization();
+
 		this.ruleTypes = RULE_TYPES;
 		this.daysOfWeek = DAYS_OF_WEEK;
 
@@ -89,6 +58,8 @@ export class LinksCheckComponent implements OnInit {
 		}
 
 		this.updateScheduledRules();
+
+		this.updateReport();
 	}
 
 	updateScheduledRules() {
@@ -123,5 +94,11 @@ export class LinksCheckComponent implements OnInit {
 		console.log("Type: " + this.newRule.type.id + ":" + this.newRule.type.name);
 		console.log("Day of week: " + this.newRule.dayOfWeek.id + ":" + this.newRule.dayOfWeek.name);
 		console.log("Time: " + this.newRule.hours + ":" + this.newRule.minutes);
+	}
+
+	updateReport() {
+		this.linksCheckService.getThirtyDaysReport()
+			.then(report => this.report = report)
+			.catch(error => console.log(error));
 	}
 }

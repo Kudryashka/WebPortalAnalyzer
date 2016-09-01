@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -21,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
@@ -56,6 +59,7 @@ public class CheckLinkService {
 	private ScheduleService scheduler;
 	private JobDetail jobDetail;
 	private Trigger nowTrigger;
+	private CheckLinksDAO checkLinksDAO;
 
 	/**
 	 * <b>Don't call this manually!</b>
@@ -87,6 +91,15 @@ public class CheckLinkService {
 		logger.info("Service destroyed");
 	}
 	
+	/**
+	 * TODO
+	 * @param checkLinksDAO
+	 */
+	@Autowired
+	public void setCheckLinksDAO(CheckLinksDAO checkLinksDAO) {
+		this.checkLinksDAO = checkLinksDAO;
+	}
+
 	/**
 	 * Used to inject {@link SettingsProvider}.
 	 */
@@ -198,30 +211,33 @@ public class CheckLinkService {
 	public final List<LinkInfo> getAllLinksOnPage(String url) {
 		logger.info("All links requested. Url: " + url);
 		List<LinkInfo> result = new ArrayList<>();
-
-		HtmlPage page = null;
-		long onLoadPageTimeout = prefsProvider.getLongPreference(
-				Preference.CHECK_LINK_ON_LOAD_PAGE_BACKGOUND_JOB_TIMEOUT);
-		
-		synchronized (webClient) {
-			try {
-				page = webClient.getPage(url);
-				//wait for background jobs
-				webClient.waitForBackgroundJavaScript(onLoadPageTimeout);
-			} catch (FailingHttpStatusCodeException | IOException e) {
-				logger.error("Error on page loading. Exception message: " + e.getMessage());
-			}
+		try {
+			HtmlPage page = null;
+			long onLoadPageTimeout = prefsProvider.getLongPreference(
+					Preference.CHECK_LINK_ON_LOAD_PAGE_BACKGOUND_JOB_TIMEOUT);
 			
-			if (page != null) {
-				logger.debug("Catch links with type : Anchor");;
-				//catch anchors
-				List<DomElement> aElements = page.getElementsByTagName("a");
-				for (DomElement e : aElements) {
-					result.add(new LinkInfo(ANCHOR, e.getAttribute("href"), url));
+			synchronized (webClient) {
+				try {
+					page = webClient.getPage(url);
+					//wait for background jobs
+					webClient.waitForBackgroundJavaScript(onLoadPageTimeout);
+				} catch (FailingHttpStatusCodeException | IOException e) {
+					logger.error("Error on page loading. Exception message: " + e.getMessage());
 				}
 				
-				//TODO add additional link types to search
+				if (page != null) {
+					logger.debug("Catch links with type : Anchor");;
+					//catch anchors
+					List<DomElement> aElements = page.getElementsByTagName("a");
+					for (DomElement e : aElements) {
+						result.add(new LinkInfo(ANCHOR, e.getAttribute("href"), url));
+					}
+					
+					//TODO add additional link types to search
+				}
 			}
+		} catch (Throwable e) {
+			logger.error("ERROR :: getAllLinksOnPage() Msg => " + e.getMessage());
 		}
 			
 		return result;
@@ -406,6 +422,22 @@ public class CheckLinkService {
 	}
 	
 	/**
+	 * TODO
+	 * @param date
+	 * @param infos
+	 */
+	@Transactional
+	public void saveCheckLinksResult(Date date, List<LinkInfo> infos) {
+		//TODO
+		checkLinksDAO.saveCheckLinksResult(date, infos);
+	}
+	
+	@Transactional
+	public HashMap<Date, List<LinkInfo>> getCheckLinkResults() {
+		return checkLinksDAO.getResults();
+	}
+	
+	/**
 	 * Initialize connection parameters to emulate real user connection.
 	 */
 	private final void initConnectionParams(HttpURLConnection conn, String cookies) throws ProtocolException {
@@ -428,7 +460,13 @@ public class CheckLinkService {
 	 * @return A split of URL that represents protocol and URL tail separately.
 	 */
 	private static String[] prepareUrlToCompare(String url) {
+		logger.info("Prepare url to compare:"  + url);
 		String[] urlSplit = url.trim().split("://"); //[0] - protocol, [1] - left part
+		
+		if (urlSplit.length == 1) {//TODO check how this possible
+			urlSplit = new String[] {"", urlSplit[0]};
+		}
+		
 		while (urlSplit[1].contains("//")) {
 			urlSplit[1] = urlSplit[1].replace("//", "/");
 		}

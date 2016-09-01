@@ -1,11 +1,16 @@
 package name.dimasik.dev.web.portalanalyzer.controllers.v1_0;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +28,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkReport;
+import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkService;
 import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkServiceStatus;
+import name.dimasik.dev.web.portalanalyzer.checklink.LinkInfo;
+import name.dimasik.dev.web.portalanalyzer.checklink.LinkStatus;
+import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.LinksCheckReport.LinksCheckReportDetail;
+import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.LinksCheckReport.LinksCheckReportDetailSummary;
+import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.LinksCheckReport.LinksCheckReportSummary;
 import name.dimasik.dev.web.portalanalyzer.schedule.SchedulerRule;
 
 /**
@@ -40,10 +51,19 @@ public class LinksCheckController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LinksCheckController.class);
 	
+	private CheckLinkService checkLinkService;
+	
+	@Autowired
+	public void setCheckLinkService(CheckLinkService checkLinkService) {
+		logger.info("Service initialized.");
+		this.checkLinkService = checkLinkService;
+	}
+
 	@PutMapping("/run")
 	public void run() {
 		logger.info("Request to run links check.");
 		//TODO request run
+		checkLinkService.processCheckLinksOnPortalNow();
 	}
 	
 	@PutMapping("/stop")
@@ -56,7 +76,7 @@ public class LinksCheckController {
 	public LinksCheckStatusResponse getStatus() {
 		logger.info("Request to get status.");
 		//TODO 
-		return new LinksCheckStatusResponse(CheckLinkServiceStatus.RUN);
+		return new LinksCheckStatusResponse(CheckLinkServiceStatus.FREE);
 	}
 	
 	@GetMapping("/schedulerRules")
@@ -113,18 +133,110 @@ public class LinksCheckController {
 			ErrorResponse error = new ErrorResponse("Wrong days count format");
 			return ResponseEntity.badRequest().body(mapper.writeValueAsString(error));
 		}
-		//TODO process 
-		List<CheckLinkReport> report = new ArrayList<>();
-		CheckLinkReport r1 = new CheckLinkReport();
-		r1.setDate(new Date());
-		r1.setErrorLinks(new ArrayList<>());
-		r1.setOkLinks(new ArrayList<>());
-		CheckLinkReport r2 = new CheckLinkReport();
-		r2.setDate(new Date(new Date().getTime() - 10000));
-		report.add(r1);
-		report.add(r2);
+		
+		//TODO
+		HashMap<Date, List<LinkInfo>>results = checkLinkService.getCheckLinkResults();
+		
+		LinksCheckReport report = new LinksCheckReport();
+		LinksCheckReportSummary summary = new LinksCheckReportSummary();
+		List<LinksCheckReportDetail> details = new ArrayList<>();
+		report.setSummary(summary);
+		report.setDetails(details);
+		
+		int errorLinksCount = 0;
+		int okLinksCount = 0;
+		int redirectLinksCount = 0;
+		int unreachableLinksCount = 0;
+		
+		DateFormat df = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+		for (Entry<Date, List<LinkInfo>> entry : results.entrySet()) {
+			LinksCheckReportDetail detail = new LinksCheckReportDetail();
+			
+			detail.setDate(df.format(entry.getKey()));//TODO
+			
+			List<LinksCheckReport.Link> errorLinks = new ArrayList<>();
+			List<LinksCheckReport.Link> okLinks = new ArrayList<>();
+			List<LinksCheckReport.RedirectLink> redirectLinks = new ArrayList<>();
+			List<LinksCheckReport.UnreachableLink> unreachableLinks = new ArrayList<>();
+			
+			int detailErrorLinksCount = 0;
+			int detailOkLinksCount = 0;
+			int detailUnreachableLinksCount = 0;
+			int detailRedirectLinksCount = 0;
+			
+			for (LinkInfo info : entry.getValue()) {
+				switch(info.linkStatus) {
+				case REDIRECT:
+					LinksCheckReport.RedirectLink redLink = new LinksCheckReport.RedirectLink();
+					redLink.setType(info.type.name());
+					redLink.setTarget(info.targetUrl);
+					redLink.setResponseCode(info.responseCode);
+					redLink.setRedirectUrl(info.redirectTarget);
+					redLink.setLocation(info.pageUrl);
+					
+					redirectLinksCount++;
+					detailRedirectLinksCount++;
+					redirectLinks.add(redLink);
+					break;
+				case ERROR:
+					LinksCheckReport.Link errorLink = new LinksCheckReport.Link();
+					errorLink.setType(info.type.name());
+					errorLink.setTarget(info.targetUrl);
+					errorLink.setResponseCode(info.responseCode);
+					errorLink.setLocation(info.pageUrl);
+					
+					errorLinksCount++;
+					detailErrorLinksCount++;
+					errorLinks.add(errorLink);
+					break;
+				case UNREACHABLE:
+					LinksCheckReport.UnreachableLink unreachableLink = new LinksCheckReport.UnreachableLink();
+					unreachableLink.setType(info.type.name());
+					unreachableLink.setTarget(info.targetUrl);
+					unreachableLink.setLocation(info.pageUrl);
+					
+					unreachableLinksCount++;
+					detailUnreachableLinksCount++;
+					unreachableLinks.add(unreachableLink);
+					break;
+				default:
+					LinksCheckReport.Link okLink = new LinksCheckReport.Link();
+					okLink.setType(info.type.name());
+					okLink.setTarget(info.targetUrl);
+					okLink.setResponseCode(info.responseCode);
+					okLink.setLocation(info.pageUrl);
+					
+					okLinksCount++;
+					detailOkLinksCount++;
+					okLinks.add(okLink);
+					break;	
+				}
+			}
+			
+			detail.setErrorLinks(errorLinks);
+			detail.setOkLinks(okLinks);
+			detail.setRedirectLinks(redirectLinks);
+			detail.setUnreachableLinks(unreachableLinks);
+			
+			LinksCheckReportDetailSummary detailSummary = new LinksCheckReportDetailSummary();
+			detailSummary.setErrorLinksCount(detailErrorLinksCount);
+			detailSummary.setOkLinksCount(detailOkLinksCount);
+			detailSummary.setUnreachableLinksCount(detailUnreachableLinksCount);
+			detailSummary.setRedirectLinksCount(detailRedirectLinksCount);
+			detail.setSummary(detailSummary);
+			details.add(detail);
+		}
+		
+		
+		summary.setCheckCount(results.size());
+		summary.setErrorLinksCount(errorLinksCount);
+		summary.setOkLinksCount(okLinksCount);
+		summary.setRedirectLinksCount(redirectLinksCount);
+		summary.setUnreachableLinksCount(unreachableLinksCount);
+				
 		String json = mapper
 						.writeValueAsString(report);
+		logger.info(json);
 		return ResponseEntity.ok(json);
 	}
 	

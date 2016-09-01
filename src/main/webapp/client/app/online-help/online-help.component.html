@@ -60,7 +60,7 @@
 		</div>
 		<div *ngIf="report">
 			<h3>Детальна інформація</h3>
-			<table class="table table-striped">
+			<table class="table table-striped" *ngIf="report.details && report.details.length > 0">
 				<thead>
 					<th>Дата перевірки</th>
 					<th>Чи доступна допомога онлайн</th>
@@ -79,6 +79,7 @@
 					</tr>
 				</tbody>
 			</table>
+			<p *ngIf="(!report.details) || (report.details.length == 0)">Немає даних для відображення</p>
 		</div>
 	</div>
 </div>

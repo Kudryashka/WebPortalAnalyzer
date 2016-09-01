@@ -1,6 +1,7 @@
 <div class="wrapper">
 	<div class="form-signin">
 		<h2 class="form-signin-heading">Аутентифікація</h2>
+		<p *ngIf="fail" class="fail-msg">Неправильний логін або пароль</p>
 		<input type="text" [(ngModel)]="username" class="form-control" name="username" placeholder="Ім'я користувача" required="" autofocus="" />
 		<input type="password" [(ngModel)]="password" class="form-control" name="password" placeholder="Пароль" required=""/>
 		<button class="btn btn-lg btn-primary btn-block" (click)="doLogin()">Вхід</button>

@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Http, Headers} from '@angular/http';
+import {Http, Headers, HTTP_PROVIDERS} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import {
 	REST_LINKS_CHECK_RUN_URL, 
 	REST_LINKS_CHECK_STOP_URL, 
-	REST_LINKS_CHECK_STATUS_URL
+	REST_LINKS_CHECK_STATUS_URL,
+	REST_LINKS_CHECK_GET_REPORT_URL
 } from '../config/config';
 
 import {LinksCheckReport} from './links-check-report';
@@ -13,8 +14,6 @@ import {AuthenticationService} from '../authentication/authentication.service';
 
 @Injectable()
 export class LinksCheckService {
-
-	private headers: Headers;
 
 	private fakeReport: LinksCheckReport = {
 		summary: {
@@ -60,23 +59,25 @@ export class LinksCheckService {
 		]
 	} 
 
-	constructor(private http: Http, private authenticationService: AuthenticationService){
-		this.headers = new Headers();
-		this.headers.append('Content-Type', 'application/json');
-		this.headers.append('Cookie', authenticationService.getCookies())
-	}
+	constructor(private http: Http, private authenticationService: AuthenticationService){}
 
 	public executeRun() {
-		this.http.put(REST_LINKS_CHECK_RUN_URL, JSON.stringify(""), 
-			{headers: this.headers, withCredentials: true})
-			.subscribe();
+		let headers: Headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+		this.http.put(REST_LINKS_CHECK_RUN_URL, '', {headers: headers}).subscribe();
 	}
 
 	public executeStop() {
-		this.http.put(REST_LINKS_CHECK_STOP_URL, JSON.stringify(""), {headers: this.headers}).subscribe();
+		let headers: Headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+		this.http.put(REST_LINKS_CHECK_STOP_URL, '', {headers: headers}).subscribe();
 	}
 
 	public getThirtyDaysReport() {
+		let url = `${REST_LINKS_CHECK_GET_REPORT_URL}30`;
+		return this.http.get(url).toPromise()
+			.then(report => report.json() as LinksCheckReport)
+			.catch(this.handleError);
 	}
 
 	private handleError(error: any) {

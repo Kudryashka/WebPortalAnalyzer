@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
+import {AuthenticationService} from '../authentication/authentication.service';
 import {SearchService} from './search.service';
 import {QueryCountPair} from './query-count-pair';
 
@@ -13,9 +14,11 @@ export class SearchComponent implements OnInit {
 	tenDaysQueries: QueryCountPair[];
 	thirtyDaysQueries: QueryCountPair[];
 
-	constructor(private searchService: SearchService) {}
+	constructor(private searchService: SearchService,
+		private authenticationService: AuthenticationService) {}
 
 	ngOnInit() {
+		this.authenticationService.checkAuthorization();
 		this.updateQueriesLists();
 	}
 

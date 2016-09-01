@@ -4,6 +4,7 @@ import {GOOGLE_MAPS_DIRECTIVES} from 'angular2-google-maps/core';
 
 import {UsersInfoReport, GeolocationSummary} from './users-info-report';
 import {UsersInfoService} from './users-info.service';
+import {AuthenticationService} from '../authentication/authentication.service';
 
 
 @Component({
@@ -25,9 +26,11 @@ export class UsersInfoComponent implements OnInit {
 
   	mapMarkers: MapMarker[] = [];
 
-	constructor(private usersInfoService: UsersInfoService) {}
+	constructor(private usersInfoService: UsersInfoService,
+		private authenticationService: AuthenticationService) {}
 
 	ngOnInit() {
+		this.authenticationService.checkAuthorization();
 		this.updateUsersInfoReport();
 	}
 

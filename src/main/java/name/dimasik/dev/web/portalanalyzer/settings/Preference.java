@@ -43,7 +43,11 @@ public enum Preference {
 	/**
 	 * TODO
 	 */
-	CHECK_LINK_ACCEPTABLE_REDIRECT_DEPTH(Type.INTEGER);
+	CHECK_LINK_ACCEPTABLE_REDIRECT_DEPTH(Type.INTEGER),
+	/**
+	 * TODO
+	 */
+	UNSUCCESSFULL_SEARCH_IS_CASE_SENSITIVE(Type.BOOLEAN);
 	
 	private Type type;
 	

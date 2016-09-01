@@ -44,6 +44,7 @@ public class SettingsProvider {
 	{//bool
 		boolPrefs.put(Preference.PORTAL_PROTOCOL_HTTP, true);
 		boolPrefs.put(Preference.PORTAL_PROTOCOL_HTTPS, false);
+		boolPrefs.put(Preference.UNSUCCESSFULL_SEARCH_IS_CASE_SENSITIVE, false);
 	}
 	{//int
 		intPrefs.put(Preference.PORTAL_PORT_NUMBER, 80);
@@ -97,6 +98,63 @@ public class SettingsProvider {
 	public long getLongPreference(Preference pref) {
 		checkPreferenceType(pref, Type.LONG);
 		return longPrefs.get(pref);
+	}
+	
+	/**
+	 * TODO
+	 * @param pref
+	 * @return
+	 */
+	public String getSettingAsString(String prefName) {
+		Preference pref = Preference.valueOf(Preference.class, prefName);
+		String result;
+		switch (pref.getType()) {
+		case STRING:
+			result = getStringPreference(pref);
+			break;
+		case STRING_ARRAY:
+			//TODO
+			result = null;
+			break;
+		case BOOLEAN:
+			result = String.valueOf(getBooleanPreference(pref));
+			break;
+		case INTEGER:
+			result = String.valueOf(getIntegerPreference(pref));
+			break;
+		case LONG:
+			result = String.valueOf(getLongPreference(pref));
+			break;
+		default:
+			throw new RuntimeException("Unknown preference type!");
+		}
+		return result;
+	}
+	
+	/**
+	 * TODO TODO TODO TODO TODO
+	 */
+	public void updateSettingByName(String name, String value) {
+		Preference pref = Preference.valueOf(Preference.class, name);
+		switch (pref.getType()) {
+		case STRING:
+			stringPrefs.put(pref, value);
+			break;
+		case STRING_ARRAY:
+			//TODO
+			break;
+		case BOOLEAN:
+			boolPrefs.put(pref, Boolean.valueOf(value));
+			break;
+		case INTEGER:
+			intPrefs.put(pref, Integer.valueOf(value));
+			break;
+		case LONG:
+			longPrefs.put(pref, Long.valueOf(value));
+			break;
+		default:
+			throw new RuntimeException("Unknown preference type!");
+		}
 	}
 	
 	/**

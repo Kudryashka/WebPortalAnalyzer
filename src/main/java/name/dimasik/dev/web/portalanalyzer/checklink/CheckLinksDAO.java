@@ -29,6 +29,7 @@ public class CheckLinksDAO {
 	private HashMap<Date, List<LinkInfo>> results = new HashMap<>();
 
 	public void saveCheckLinksResult(Date date, List<LinkInfo> infos) {
+		results.clear();
 		results.put(date, infos);
 	}
 	

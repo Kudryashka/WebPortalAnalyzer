@@ -32,7 +32,7 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		logger.info("Authentication success!");
-		allowCors(response);
+		allowCors(request, response);
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		if (savedRequest == null) {
 			clearAuthenticationAttributes(request);
@@ -49,8 +49,9 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 		}
 	}
 	
-	private static void allowCors(HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+	private static void allowCors(HttpServletRequest request, HttpServletResponse response) {
+		String origin = request.getHeader("Origin");
+		response.setHeader("Access-Control-Allow-Origin", origin == null ? "*" : origin);
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 	    response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
 	    response.setHeader("Access-Control-Expose-Headers", "*");

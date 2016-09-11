@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import name.dimasik.dev.web.portalanalyzer.userinfo.UserInfoService;
 
 /**
- * TODO add description
+ * TODO delete this controller
  *
  * @author Dmytro Kudria
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
@@ -22,6 +22,7 @@ import name.dimasik.dev.web.portalanalyzer.userinfo.UserInfoService;
  */
 @Controller
 @RequestMapping("/http/")
+@Deprecated
 public class HttpController {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpController.class);

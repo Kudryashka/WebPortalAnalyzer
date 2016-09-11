@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import name.dimasik.dev.web.portalanalyzer.search.SearchQueryService;
 
 /**
- * TODO add description
+ * TODO delete this controller
  *
  * @author Dmytro Kudria
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
@@ -29,6 +29,7 @@ import name.dimasik.dev.web.portalanalyzer.search.SearchQueryService;
 @RestController
 @RequestMapping("/v1.0/portalEmptySearch")
 @CrossOrigin
+@Deprecated
 public class EmptySearchController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EmptySearchController.class);

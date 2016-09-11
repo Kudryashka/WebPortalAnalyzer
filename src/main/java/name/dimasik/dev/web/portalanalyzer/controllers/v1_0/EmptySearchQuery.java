@@ -7,6 +7,7 @@ package name.dimasik.dev.web.portalanalyzer.controllers.v1_0;
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  *
  */
+@Deprecated
 public class EmptySearchQuery {
 
 	private String query;

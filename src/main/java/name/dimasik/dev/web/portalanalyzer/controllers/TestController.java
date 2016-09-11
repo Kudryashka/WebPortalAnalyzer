@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.EmptySearchQuery;
 import name.dimasik.dev.web.portalanalyzer.search.SearchQueryService;
 
 /**
  * 
- * TODO add description
+ * Controller for requests for simple test pages. Should be removed in future.
  *
  * @author Dmytro Kudria
  * @author <a href="http://dimasik.name">http://dimasik.name</a>

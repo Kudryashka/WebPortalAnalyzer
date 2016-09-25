@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +26,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkReport;
 import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkService;
 import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkServiceStatus;
 import name.dimasik.dev.web.portalanalyzer.checklink.LinkInfo;
-import name.dimasik.dev.web.portalanalyzer.checklink.LinkStatus;
 import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.LinksCheckReport.LinksCheckReportDetail;
 import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.LinksCheckReport.LinksCheckReportDetailSummary;
 import name.dimasik.dev.web.portalanalyzer.controllers.v1_0.LinksCheckReport.LinksCheckReportSummary;
@@ -46,7 +43,6 @@ import name.dimasik.dev.web.portalanalyzer.schedule.SchedulerRule;
  */
 @RestController
 @RequestMapping("/v1.0/portalLinksCheck")
-@CrossOrigin
 public class LinksCheckController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LinksCheckController.class);

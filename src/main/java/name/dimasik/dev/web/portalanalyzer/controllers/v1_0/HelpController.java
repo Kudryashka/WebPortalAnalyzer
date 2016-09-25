@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1.0/portalHelp")
-@CrossOrigin
 public class HelpController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HelpController.class);

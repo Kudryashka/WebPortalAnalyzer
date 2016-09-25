@@ -28,7 +28,6 @@ import name.dimasik.dev.web.portalanalyzer.search.SearchQueryService;
  */
 @RestController
 @RequestMapping("/v1.0/portalEmptySearch")
-@CrossOrigin
 @Deprecated
 public class EmptySearchController {
 	

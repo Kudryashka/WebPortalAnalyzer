@@ -29,7 +29,7 @@ import name.dimasik.dev.web.portalanalyzer.util.WrongMessageFormatException;
  *
  */
 @RestController("SearchRequestsController_v1.1")
-@RequestMapping("/v1.1/searchRequests")
+@RequestMapping("/api/v1.1/searchRequests")
 @CrossOrigin
 public class SearchRequestsController implements ExceptionHandledController {
 

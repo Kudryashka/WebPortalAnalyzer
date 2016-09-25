@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  *
  */
 @RestController
-@RequestMapping("/v1.0/")
+@RequestMapping("/api/v1.0/")
 @Deprecated
 public class RestController_v1_0 {
 	

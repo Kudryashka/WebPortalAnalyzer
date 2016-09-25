@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import name.dimasik.dev.web.portalanalyzer.search.SearchQueryService;
 
@@ -27,6 +28,7 @@ import name.dimasik.dev.web.portalanalyzer.search.SearchQueryService;
  *
  */
 @Controller
+@RequestMapping("/api/")
 public class TestController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TestController.class);

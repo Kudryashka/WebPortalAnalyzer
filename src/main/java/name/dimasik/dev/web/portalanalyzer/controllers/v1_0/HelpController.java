@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1.0/portalHelp")
+@RequestMapping("/api/v1.0/portalHelp")
 public class HelpController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HelpController.class);

@@ -28,7 +28,7 @@ import name.dimasik.dev.web.portalanalyzer.userinfo.UserRequestInfo;
  *
  */
 @RestController
-@RequestMapping("/v1.0/portalUsersInfo")
+@RequestMapping("/api/v1.0/portalUsersInfo")
 @Deprecated
 public class UsersInfoController {
 	

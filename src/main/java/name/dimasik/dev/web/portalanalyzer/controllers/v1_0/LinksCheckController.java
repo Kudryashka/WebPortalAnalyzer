@@ -42,7 +42,7 @@ import name.dimasik.dev.web.portalanalyzer.schedule.SchedulerRule;
  *
  */
 @RestController
-@RequestMapping("/v1.0/portalLinksCheck")
+@RequestMapping("/api/v1.0/portalLinksCheck")
 public class LinksCheckController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LinksCheckController.class);

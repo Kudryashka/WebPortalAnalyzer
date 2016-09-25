@@ -25,7 +25,7 @@ import name.dimasik.dev.web.portalanalyzer.settings.SettingsProvider;
  *
  */
 @RestController
-@RequestMapping("/v1.0/portalSettings")
+@RequestMapping("/api/v1.0/portalSettings")
 public class SettingsController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SettingsController.class);

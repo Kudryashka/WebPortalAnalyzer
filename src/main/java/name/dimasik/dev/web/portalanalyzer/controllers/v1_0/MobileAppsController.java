@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-@RequestMapping("/v1.0/portalMobileApps")
+@RequestMapping("/api/v1.0/portalMobileApps")
 public class MobileAppsController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MobileAppsController.class);

@@ -21,7 +21,7 @@ import name.dimasik.dev.web.portalanalyzer.userinfo.UserInfoService;
  *
  */
 @Controller
-@RequestMapping("/http/")
+@RequestMapping("/api/http/")
 @Deprecated
 public class HttpController {
 

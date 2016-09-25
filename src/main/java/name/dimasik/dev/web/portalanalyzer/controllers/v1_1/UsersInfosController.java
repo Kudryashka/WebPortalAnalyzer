@@ -31,7 +31,7 @@ import name.dimasik.dev.web.portalanalyzer.util.Parser.DaysCountFormatException;
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  *
  */
-@RestController
+@RestController("UsersInfosController_v1.1")
 @RequestMapping("/v1.1/usersInfos")
 @CrossOrigin
 public class UsersInfosController implements ExceptionHandledController {

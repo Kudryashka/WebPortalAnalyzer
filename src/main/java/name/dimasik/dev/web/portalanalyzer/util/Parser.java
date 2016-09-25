@@ -35,6 +35,27 @@ public class Parser {
 	}
 	
 	/**
+	 * Convert ID represented as <code>String</code> to ID represented as <code>int</code>
+	 * @param value ID as <code>String</code>
+	 * @return ID represented as <code>int</code>
+	 * @throws WrongIDFormatException Throws when ID format is wrong.
+	 */
+	public static int parseIntegerID(String value) throws WrongIDFormatException {
+		int result = -1;
+		try {
+			result = Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			throw new WrongIDFormatException("Wrong format of identifier. Identifier should be represented as integer.");
+		}
+		
+		if (result < 0) {
+			throw new WrongIDFormatException("Wrong format of identifier. Identifier should be positive integer.");
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Exception for illegal format of days count.
 	 *
 	 * @author Dmytro Kudria

@@ -3,6 +3,7 @@ package name.dimasik.dev.web.portalanalyzer.controllers.v1_1;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import name.dimasik.dev.web.portalanalyzer.util.Parser;
+import name.dimasik.dev.web.portalanalyzer.util.WrongIDFormatException;
 import name.dimasik.dev.web.portalanalyzer.util.WrongMessageFormatException;
 
 /**
@@ -43,4 +44,14 @@ public final class ErrorConstants {
 	 * Default message of the error caused by {@link WrongMessageFormatException} 
 	 */
 	public static final String WRONG_MESSAGE_FORMAT_ERROR_MESSAGE = "Message format is wrong.";
+	
+	/**
+	 * Name of the error caused by {@link WrongIDFormatException}
+	 */
+	public static final String WRONG_ID_FORMAT_ERROR_NAME = "WRONG_ID_FORMAT";
+	
+	/**
+	 * Default message of the error caused by {@link WrongIDFormatException} 
+	 */
+	public static final String WRONG_ID_FORMAT_ERROR_MESSAGE = "Identifier format is wrong.";
 }

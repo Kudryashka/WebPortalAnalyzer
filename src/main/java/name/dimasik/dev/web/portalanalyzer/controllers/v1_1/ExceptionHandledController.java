@@ -5,6 +5,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import name.dimasik.dev.web.portalanalyzer.util.Parser;
+import name.dimasik.dev.web.portalanalyzer.util.WrongIDFormatException;
 import name.dimasik.dev.web.portalanalyzer.util.WrongMessageFormatException;
 
 import static name.dimasik.dev.web.portalanalyzer.controllers.v1_1.ErrorConstants.*;
@@ -57,6 +58,20 @@ public interface ExceptionHandledController {
 		ErrorResponse error = new ErrorResponse(
 				WRONG_MESSAGE_FORMAT_ERROR_NAME, 
 				WRONG_MESSAGE_FORMAT_ERROR_MESSAGE, 
+				e.getMessage());
+		return ResponseEntity.badRequest().body(error);
+	}
+	
+	/**
+	 * Handle {@link WrongIDFormatException} and return user friendly message.
+	 * @param e An exception thrown by the controller.
+	 * @return An error response.
+	 */
+	@ExceptionHandler(WrongIDFormatException.class)
+	default ResponseEntity<ErrorResponse> handleWrongIDFormatException(Exception e) {
+		ErrorResponse error = new ErrorResponse(
+				WRONG_ID_FORMAT_ERROR_NAME, 
+				WRONG_ID_FORMAT_ERROR_MESSAGE, 
 				e.getMessage());
 		return ResponseEntity.badRequest().body(error);
 	}

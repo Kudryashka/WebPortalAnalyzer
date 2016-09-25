@@ -28,7 +28,7 @@ import name.dimasik.dev.web.portalanalyzer.util.WrongMessageFormatException;
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  *
  */
-@RestController
+@RestController("SearchRequestsController_v1.1")
 @RequestMapping("/v1.1/searchRequests")
 @CrossOrigin
 public class SearchRequestsController implements ExceptionHandledController {

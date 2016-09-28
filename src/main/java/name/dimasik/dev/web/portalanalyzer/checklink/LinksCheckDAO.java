@@ -28,4 +28,12 @@ public interface LinksCheckDAO {
 	 * @param check The {@link LinksCheck}
 	 */
 	void updateLinksCheck(LinksCheck check);
+	
+	
+	/**
+	 * Get detail information about the check with specified identifier.
+	 * @param checkId Check identifier.
+	 * @return List of checked links during the check.
+	 */
+	List<CheckedLink> getCheckDetails(int checkId);
 }

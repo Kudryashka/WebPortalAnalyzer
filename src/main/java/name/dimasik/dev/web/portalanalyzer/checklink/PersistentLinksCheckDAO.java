@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -41,9 +42,12 @@ public class PersistentLinksCheckDAO implements LinksCheckDAO {
 			public void execute(Session session) {
 				session.createQuery("from LinksCheck", PersistentLinksCheck.class)
 					.stream().collect(Collectors.toList())
-					.forEach(check -> result.add(check));				
+					.forEach(check -> result.add(check));	
 			}
 		});
+		
+		//TODO tmp
+		result.forEach(check -> check.setCheckedLinks(getCheckDetails(check.getId())));
 		
 		return result;
 	}
@@ -56,8 +60,9 @@ public class PersistentLinksCheckDAO implements LinksCheckDAO {
 			HibernateUtils.processPersistentJob(sessionFactory, new PersistentJob() {
 				@Override
 				public void execute(Session session) {
-					session.persist(check);
+					int checkId = (int) session.save(check);
 					for (PersistentCheckedLink link : persistentCheck.getCheckedLinks()) {
+						link.setCheckId(checkId);
 						session.persist(link);
 					}
 				}
@@ -77,5 +82,19 @@ public class PersistentLinksCheckDAO implements LinksCheckDAO {
 		} else {
 			throw new IllegalArgumentException("Illegal type of argument");
 		}
+	}
+
+	@Override
+	public List<CheckedLink> getCheckDetails(int checkId) {
+		List<CheckedLink> result = new ArrayList<>();
+		HibernateUtils.processPersistentJob(sessionFactory, new PersistentJob() {
+			@Override
+			public void execute(Session session) {
+				Query<CheckedLink> query = session.createQuery("from CheckedLink where checkId=:checkid", CheckedLink.class);
+				query.setParameter("checkid", checkId);
+				query.stream().collect(Collectors.toList()).forEach(l -> result.add(l));
+			}
+		});
+		return result;
 	}
 }

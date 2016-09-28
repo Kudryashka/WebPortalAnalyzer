@@ -476,6 +476,11 @@ public class CheckLinkService {
 		return checks;
 	}
 	
+	@Transactional
+	public List<CheckedLink> getCheckDetails(int checkId) {
+		return linksCheckDAO.getCheckDetails(checkId);
+	}
+	
 	/**
 	 * Initialize connection parameters to emulate real user connection.
 	 */

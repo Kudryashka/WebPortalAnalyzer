@@ -102,12 +102,20 @@ public class LinksCheckController implements ExceptionHandledController {
 	 * Get details about some concrete check of links on the portal.
 	 */
 	@GetMapping("/details/{id}")
-	public JsonDetails getDetails(@PathVariable("id") String idStr) throws WrongIDFormatException {
+	public ResponseEntity<JsonDetails> getDetails(@PathVariable("id") String idStr) throws WrongIDFormatException {
 		logger.info("details() Check ID: " + idStr);
 		
 		int id = Parser.parseIntegerID(idStr);
+		List<CheckedLink> links = checkLinkService.getCheckDetails(id);
+		
 		//TODO
-		return null;
+		List<JsonDetails.Link> detLinks = new ArrayList<>();
+		links.forEach(l -> detLinks.add(new JsonDetails.Link(
+				JsonDetails.Link.Status.valueOf(l.getLinkStatus().toString()), l.getLinkType().toString(), 
+				l.getLocation(), l.getTarget(), l.getResponseCode(), l.getRedirectUrl())));
+		JsonDetails json = new JsonDetails(id, new Date(), new Date(), detLinks);
+		
+		return ResponseEntity.ok(json);
 	}
 	
 	//TODO Add scheduler operations

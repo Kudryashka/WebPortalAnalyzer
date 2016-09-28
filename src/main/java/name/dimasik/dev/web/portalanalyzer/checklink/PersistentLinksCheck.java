@@ -6,12 +6,11 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Represents {@link LinksCheck} implementation for persistent layer.
@@ -35,7 +34,6 @@ public class PersistentLinksCheck implements LinksCheck {
 		List<CheckedLink> checkedLinks = new ArrayList<>();
 		for (LinkInfo info : infos) {
 			CheckedLink link = new PersistentCheckedLink();
-			link.setLinksCheck(linksCheck);
 			link.setLinkStatus(info.linkStatus);
 			link.setLinkType(info.type);
 			link.setLocation(info.pageUrl);
@@ -64,7 +62,7 @@ public class PersistentLinksCheck implements LinksCheck {
 	private Date endTime;
 	
 	//TODO
-	@OneToMany(mappedBy = "linksCheck", fetch = FetchType.EAGER)
+	@Transient
 	private List<PersistentCheckedLink> checkedLinks;
 	
 	@Override

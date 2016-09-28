@@ -9,10 +9,10 @@ package name.dimasik.dev.web.portalanalyzer.checklink;
 public interface CheckedLink {
 	
 	/**
-	 * Get links check relative to this checked link object.
-	 * @return The links check.
+	 * Get identifier of the links check relative to this checked link object.
+	 * @return The links check identifier.
 	 */
-	LinksCheck getLinksCheck();
+	int getCheckId();
 	
 	/**
 	 * Get status of the link.
@@ -51,10 +51,10 @@ public interface CheckedLink {
 	String getRedirectUrl();
 	
 	/**
-	 * Set check relative to this checked link.
-	 * @param The links check object.
+	 * Set identifier of the related check.
+	 * @param The links check identifier.
 	 */
-	<T extends LinksCheck> void setLinksCheck(T linksCheck);
+	void setCheckId(int id);
 	
 	/**
 	 * Set status of the link.

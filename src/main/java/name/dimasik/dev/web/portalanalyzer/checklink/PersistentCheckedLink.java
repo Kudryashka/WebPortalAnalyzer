@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -24,10 +22,9 @@ public class PersistentCheckedLink implements CheckedLink {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, unique = true)
 	private int id;
-
-	@ManyToOne
-	@JoinColumn(name = "check_id", nullable = false)
-	private PersistentLinksCheck linksCheck;
+	
+	@Column(name = "check_id", nullable = false)
+	private int checkId;
 	
 	@Column(name = "link_status", nullable = false, length = 15)
 	private LinkStatus linkStatus;
@@ -56,8 +53,8 @@ public class PersistentCheckedLink implements CheckedLink {
 	}
 
 	@Override
-	public PersistentLinksCheck getLinksCheck() {
-		return linksCheck;
+	public int getCheckId() {
+		return checkId;
 	}
 
 	@Override
@@ -92,8 +89,8 @@ public class PersistentCheckedLink implements CheckedLink {
 
 	//TODO
 	@Override
-	public void setLinksCheck(LinksCheck check) {
-		this.linksCheck = (PersistentLinksCheck) check;
+	public void setCheckId(int id) {
+		this.checkId = id;
 	}
 
 	@Override

@@ -460,7 +460,7 @@ public class CheckLinkService {
 	 * @param end
 	 * @param infos
 	 */
-//	@Transactional
+	@Transactional
 	public void saveLinksCheckResult(Date start, Date end, List<LinkInfo> infos) {
 		logger.info("Save links check result. Links infos count: " + infos.size());
 		LinksCheck linksCheck = PersistentLinksCheck.fromLinkInfos(start, end, infos);

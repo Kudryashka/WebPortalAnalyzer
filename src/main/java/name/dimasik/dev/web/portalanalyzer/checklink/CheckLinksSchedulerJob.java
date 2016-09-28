@@ -26,8 +26,7 @@ public class CheckLinksSchedulerJob implements Job {
 	private CheckLinkService service;
 	
 	/**
-	 * 
-	 * @param service
+	 * Using to inject {@link CheckLinkService}
 	 */
 	public void setService(CheckLinkService service) {
 		this.service = service;
@@ -35,7 +34,7 @@ public class CheckLinksSchedulerJob implements Job {
 
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		try {
+		try {			
 			logger.info("Start execution of check link service job");
 			service.checkLinksOnPortal();
 			logger.info("Execution of check link service job finished");

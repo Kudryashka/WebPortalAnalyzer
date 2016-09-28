@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import name.dimasik.dev.web.portalanalyzer.util.HibernateUtils;
+import name.dimasik.dev.web.portalanalyzer.util.HibernateUtils.PersistentJob;
 
 /**
  * {@link LinksCheckDAO} implementation for persistent layer.
@@ -34,41 +34,16 @@ public class PersistentLinksCheckDAO implements LinksCheckDAO {
 
 	@Override
 	public List<LinksCheck> getLinksChecks(int days) {
-		Session session = null;
-//		try {
-			session = sessionFactory.getCurrentSession();
-//		} catch (HibernateException e) {
-//			session = sessionFactory.openSession();
-//		}
-//		if (!session.isOpen()) {
-//			session = sessionFactory.openSession();
-//		}
-		
 		List<LinksCheck> result = new ArrayList<>();
 		
-		//TODO
-//		for (LinksCheck check : result) {
-//			for (CheckedLink l : check.getCheckedLinks()) {
-//				Hibernate.initialize(l);
-//			}
-//		}
-		
-//		Transaction tx = null;
-//		try {
-//			tx = session.beginTransaction();
-//			
-			List<PersistentLinksCheck> linksChecks = session
-					.createQuery("from LinksCheck", PersistentLinksCheck.class)
-					.stream().collect(Collectors.toList());
-//			tx.commit();
-			// TODO
-			
-			
-			linksChecks.forEach(check -> result.add(check));
-			
-//		} finally {
-//			session.close();
-//		}
+		HibernateUtils.processPersistentJob(sessionFactory, new PersistentJob() {
+			@Override
+			public void execute(Session session) {
+				session.createQuery("from LinksCheck", PersistentLinksCheck.class)
+					.stream().collect(Collectors.toList())
+					.forEach(check -> result.add(check));				
+			}
+		});
 		
 		return result;
 	}
@@ -77,31 +52,17 @@ public class PersistentLinksCheckDAO implements LinksCheckDAO {
 	public void addLinksCheck(LinksCheck check) {
 		if (check instanceof PersistentLinksCheck) {
 			PersistentLinksCheck persistentCheck = (PersistentLinksCheck) check;
-			//TODO
-			Session session = null;
-			try {
-				session = sessionFactory.getCurrentSession(); 
-			} catch(HibernateException e) {
-				session = sessionFactory.openSession();
-			}
-			if (!session.isOpen()) {
-				session = sessionFactory.openSession();
-			}
 			
-			Transaction tx = null;
-			try {
-				tx = session.beginTransaction();
-				session.persist(persistentCheck);
-				for (PersistentCheckedLink link : persistentCheck.getCheckedLinks()) {
-					session.persist(link);
+			HibernateUtils.processPersistentJob(sessionFactory, new PersistentJob() {
+				@Override
+				public void execute(Session session) {
+					session.persist(check);
+					for (PersistentCheckedLink link : persistentCheck.getCheckedLinks()) {
+						session.persist(link);
+					}
 				}
-				tx.commit();
-			} catch(Exception e) {
-				if (tx != null) tx.rollback();
-				throw e;
-			} finally {
-				session.close();
-			}
+			});
+			
 		} else {
 			throw new IllegalArgumentException("Illegal type of argument");
 		}
@@ -109,6 +70,7 @@ public class PersistentLinksCheckDAO implements LinksCheckDAO {
 
 	@Override
 	public void updateLinksCheck(LinksCheck check) {
+		//TODO
 		if (check instanceof PersistentLinksCheck) {
 			PersistentLinksCheck persistentCheck = (PersistentLinksCheck) check;
 			sessionFactory.getCurrentSession().update(persistentCheck);

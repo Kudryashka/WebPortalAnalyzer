@@ -13,6 +13,7 @@ import java.util.List;
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  *
  */
+@Deprecated
 public class CheckLinkReport {
 
 	private Date date;

@@ -33,6 +33,13 @@ public class LinksCheckController implements ExceptionHandledController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LinksCheckController.class);
 	
+	private static ThreadLocal<DateFormat> DATE_FORMAT_TL = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("HH:mm dd/MM/yyyy");
+		}
+	};
+	
 	/**
 	 * Request to run check of links on the portal.
 	 */
@@ -169,23 +176,18 @@ public class LinksCheckController implements ExceptionHandledController {
 		
 		public static final class Details {
 			
-			private static ThreadLocal<DateFormat> DATA_FORMAT_TL = new ThreadLocal<DateFormat>() {
-				@Override
-				protected DateFormat initialValue() {
-					return new SimpleDateFormat("HH:mm dd/MM/yyyy");
-				}
-			};
-			
 			private final int id;
-			private final String date;
+			private final String start;
+			private final String end;
 			private final int ok;
 			private final int error;
 			private final int unreachable;
 			private final int redirect;
 			
-			private Details(int id, Date date, int ok, int error, int unreachable, int redirect) {
+			private Details(int id, Date start, Date end, int ok, int error, int unreachable, int redirect) {
 				this.id = id;
-				this.date = DATA_FORMAT_TL.get().format(date);
+				this.start = DATE_FORMAT_TL.get().format(start);
+				this.end = DATE_FORMAT_TL.get().format(end);
 				this.ok = ok;
 				this.error = error;
 				this.unreachable = unreachable;
@@ -196,8 +198,12 @@ public class LinksCheckController implements ExceptionHandledController {
 				return id;
 			}
 
-			public String getDate() {
-				return date;
+			public String getStart() {
+				return start;
+			}
+			
+			public String getEnd() {
+				return end;
 			}
 
 			public int getOk() {
@@ -222,17 +228,29 @@ public class LinksCheckController implements ExceptionHandledController {
 	 * JSON representation of the details
 	 */
 	public static final class JsonDetails {
-		//TODO
+		
 		private final int id;
+		private final String start;
+		private final String end;
 		private final List<Link> links;
 		
-		private JsonDetails(int id, List<Link> links) {
+		private JsonDetails(int id, Date start, Date end, List<Link> links) {
 			this.id = id;
+			this.start = DATE_FORMAT_TL.get().format(start);
+			this.end = DATE_FORMAT_TL.get().format(end);
 			this.links = links;
 		}
 		
 		public int getId() {
 			return id;
+		}
+
+		public String getStart() {
+			return start;
+		}
+
+		public String getEnd() {
+			return end;
 		}
 
 		public List<Link> getLinks() {

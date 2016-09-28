@@ -29,8 +29,7 @@ public class SearchQueryPersistentDAO implements SearchQueriesDAO {
 	private SessionFactory sessionFactory;
 	
 	/**
-	 * TODO
-	 * @param sessionFactory
+	 * Using for session factory injection
 	 */
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {

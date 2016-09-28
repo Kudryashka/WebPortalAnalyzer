@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
+@Deprecated
 public class CheckLinksDAO {
 	
 	private SessionFactory sessionFactory;

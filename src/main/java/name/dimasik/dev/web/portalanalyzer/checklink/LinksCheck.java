@@ -33,7 +33,7 @@ public interface LinksCheck {
 	 * Get links checked by this check.
 	 * @return The list of the checked links.
 	 */
-	List<CheckedLink> getCheckedLinks();
+	List<? extends CheckedLink> getCheckedLinks();
 	
 	/**
 	 * Set ID of the links check.
@@ -57,5 +57,5 @@ public interface LinksCheck {
 	 * Set links checked by this check.
 	 * @param links The list of the checked links.
 	 */
-	void setCheckedLinks(List<CheckedLink> links);
+	void setCheckedLinks(List<? extends CheckedLink> links);
 }

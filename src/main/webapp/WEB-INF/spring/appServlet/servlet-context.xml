@@ -46,6 +46,8 @@
 		</beans:property>
 		<beans:property name="annotatedClasses">
 			<beans:list>
+				<beans:value>name.dimasik.dev.web.portalanalyzer.checklink.PersistentCheckedLink</beans:value>
+				<beans:value>name.dimasik.dev.web.portalanalyzer.checklink.PersistentLinksCheck</beans:value>
 				<beans:value>name.dimasik.dev.web.portalanalyzer.search.PersistentQueryObject</beans:value>
 				<beans:value>name.dimasik.dev.web.portalanalyzer.userinfo.PersistentUserInfo</beans:value>
 				<beans:value>name.dimasik.dev.web.portalanalyzer.settings.Setting</beans:value>

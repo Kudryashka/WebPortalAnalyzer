@@ -1,5 +1,6 @@
 package name.dimasik.dev.web.portalanalyzer.checklink;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,34 @@ import javax.persistence.Table;
 @Table(name = "links_check")
 public class PersistentLinksCheck implements LinksCheck {
 
+	/**
+	 * Initialize new object from {@link LinkInfo} list.
+	 * @param infos List of {@link LinkInfo}
+	 * @return New instance of {@link PersistentLinksCheck}
+	 */
+	public static LinksCheck fromLinkInfos(Date start, Date end, List<LinkInfo> infos) {
+		PersistentLinksCheck linksCheck = new PersistentLinksCheck();
+		
+		List<CheckedLink> checkedLinks = new ArrayList<>();
+		for (LinkInfo info : infos) {
+			CheckedLink link = new PersistentCheckedLink();
+			link.setLinksCheck(linksCheck);
+			link.setLinkStatus(info.linkStatus);
+			link.setLinkType(info.type);
+			link.setLocation(info.pageUrl);
+			link.setRedirectUrl(info.redirectTarget);
+			link.setResponseCode(info.responseCode);
+			link.setTarget(info.targetUrl);
+			checkedLinks.add(link);
+		}
+		
+		linksCheck.setStartTime(start);
+		linksCheck.setEndTime(end);
+		linksCheck.setCheckedLinks(checkedLinks);
+		
+		return linksCheck;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, unique = true)
@@ -34,8 +63,9 @@ public class PersistentLinksCheck implements LinksCheck {
 	@Column(name = "end_time")
 	private Date endTime;
 	
-	@OneToMany(mappedBy = "linksCheck", fetch = FetchType.LAZY)
-	private List<CheckedLink> checkedLinks;
+	//TODO
+	@OneToMany(mappedBy = "linksCheck", fetch = FetchType.EAGER)
+	private List<PersistentCheckedLink> checkedLinks;
 	
 	@Override
 	public int getId() {
@@ -68,13 +98,12 @@ public class PersistentLinksCheck implements LinksCheck {
 	}
 
 	@Override
-	public List<CheckedLink> getCheckedLinks() {
+	public List<PersistentCheckedLink> getCheckedLinks() {
 		return checkedLinks;
 	}
 
 	@Override
-	public void setCheckedLinks(List<CheckedLink> links) {
-		this.checkedLinks = links;
+	public void setCheckedLinks(List<? extends CheckedLink> links) {
+		this.checkedLinks = (List<PersistentCheckedLink>) links;
 	}
-
 }

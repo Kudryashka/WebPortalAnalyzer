@@ -2,11 +2,13 @@ package name.dimasik.dev.web.portalanalyzer.controllers.v1_1;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import name.dimasik.dev.web.portalanalyzer.checklink.CheckLinkService;
+import name.dimasik.dev.web.portalanalyzer.checklink.CheckedLink;
+import name.dimasik.dev.web.portalanalyzer.checklink.LinksCheck;
 import name.dimasik.dev.web.portalanalyzer.util.Parser;
 import name.dimasik.dev.web.portalanalyzer.util.Parser.DaysCountFormatException;
 import name.dimasik.dev.web.portalanalyzer.util.WrongIDFormatException;
@@ -40,13 +45,23 @@ public class LinksCheckController implements ExceptionHandledController {
 		}
 	};
 	
+	private CheckLinkService checkLinkService;
+	
+	/**
+	 * Using for service injection.
+	 */
+	@Autowired
+	public void setCheckLinkService(CheckLinkService checkLinkService) {
+		this.checkLinkService = checkLinkService;
+	}
+
 	/**
 	 * Request to run check of links on the portal.
 	 */
 	@PutMapping("/run")
 	public ResponseEntity<String> run() {
 		logger.info("run()");
-		//TODO
+		checkLinkService.processCheckLinksOnPortalNow();
 		return ResponseEntity.ok("");
 	}
 	
@@ -78,8 +93,9 @@ public class LinksCheckController implements ExceptionHandledController {
 		logger.info("report() Days count: " + daysStr);
 		
 		int days = Parser.parseDaysCount(daysStr);
-		//TODO
-		return null;
+		List<LinksCheck> checks = checkLinkService.getCheckResults(days);
+		
+		return ResponseEntity.ok(JsonReport.fromChecksList(checks));
 	}
 	
 	/**
@@ -123,6 +139,36 @@ public class LinksCheckController implements ExceptionHandledController {
 		
 		private final Summary summary;
 		private final List<Details> details;
+		
+		private static JsonReport fromChecksList(List<LinksCheck> checks) {
+			//construct details
+			List<Details> details = new ArrayList<>();
+			for (LinksCheck c : checks) {
+				int ok = 0, error = 0, unreachable = 0, redirect = 0;
+				for (CheckedLink link : c.getCheckedLinks()) {
+					switch (link.getLinkStatus()) {
+					case ERROR: error++; break;
+					case OK: ok++; break;
+					case REDIRECT: redirect++; break;
+					case UNREACHABLE: unreachable++; break;
+					}
+				}
+				Details d = new Details(c.getId(), c.getStartTime(), c.getEndTime(), 
+						ok, error, unreachable, redirect);
+				details.add(d);
+			}
+			//construct summary
+			int ok = 0, error = 0, unreachable = 0, redirect = 0;
+			for (Details d : details) {
+				ok += d.ok;
+				error += d.error;
+				unreachable += d.unreachable;
+				redirect += d.redirect;
+			}
+			int total = ok + error + unreachable + redirect;
+			Summary summary = new Summary(total, ok, error, unreachable, redirect);
+			return new JsonReport(summary, details);
+		}
 		
 		private JsonReport(Summary summary, List<Details> details) {
 			this.summary = summary;

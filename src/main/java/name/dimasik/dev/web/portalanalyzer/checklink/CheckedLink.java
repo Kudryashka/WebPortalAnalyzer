@@ -7,7 +7,7 @@ package name.dimasik.dev.web.portalanalyzer.checklink;
  * @author <a href="http://dimasik.name">http://dimasik.name</a>
  */
 public interface CheckedLink {
-
+	
 	/**
 	 * Get links check relative to this checked link object.
 	 * @return The links check.
@@ -54,7 +54,7 @@ public interface CheckedLink {
 	 * Set check relative to this checked link.
 	 * @param The links check object.
 	 */
-	void setLinksCheck(LinksCheck linksCheck);
+	<T extends LinksCheck> void setLinksCheck(T linksCheck);
 	
 	/**
 	 * Set status of the link.

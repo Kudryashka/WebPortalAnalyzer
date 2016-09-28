@@ -5,6 +5,7 @@ CREATE TABLE links_check (
 );
 
 CREATE TABLE checked_links (
+	id SERIAL PRIMARY KEY, -- To support Entity mapping (JPA)
 	check_id INTEGER REFERENCES links_check(id) ON DELETE RESTRICT,
 	link_status VARCHAR(15) NOT NULL,
 	link_type VARCHAR(15) NOT NULL,

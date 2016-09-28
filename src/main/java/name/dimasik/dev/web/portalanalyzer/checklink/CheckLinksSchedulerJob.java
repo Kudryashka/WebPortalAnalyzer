@@ -37,10 +37,7 @@ public class CheckLinksSchedulerJob implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
 			logger.info("Start execution of check link service job");
-			Date date = new Date();
-			List<LinkInfo> result = service.checkLinksOnPortal();
-			logger.info("Links infos collected. Start saving process.");
-			service.saveCheckLinksResult(date, result);
+			service.checkLinksOnPortal();
 			logger.info("Execution of check link service job finished");
 		} catch (Exception e) {
 			StringWriter sw = new StringWriter();

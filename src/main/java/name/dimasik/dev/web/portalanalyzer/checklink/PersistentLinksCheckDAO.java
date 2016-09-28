@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -30,16 +33,42 @@ public class PersistentLinksCheckDAO implements LinksCheckDAO {
 	}
 
 	@Override
-	public List<LinksCheck> getLinksCheck(int days) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		List<PersistentLinksCheck> linksChecks = session
-				.createQuery("from LinksCheck", PersistentLinksCheck.class)
-				.stream().collect(Collectors.toList());
-		// TODO
+	public List<LinksCheck> getLinksChecks(int days) {
+		Session session = null;
+//		try {
+			session = sessionFactory.getCurrentSession();
+//		} catch (HibernateException e) {
+//			session = sessionFactory.openSession();
+//		}
+//		if (!session.isOpen()) {
+//			session = sessionFactory.openSession();
+//		}
 		
 		List<LinksCheck> result = new ArrayList<>();
-		linksChecks.forEach(check -> result.add(check));
+		
+		//TODO
+//		for (LinksCheck check : result) {
+//			for (CheckedLink l : check.getCheckedLinks()) {
+//				Hibernate.initialize(l);
+//			}
+//		}
+		
+//		Transaction tx = null;
+//		try {
+//			tx = session.beginTransaction();
+//			
+			List<PersistentLinksCheck> linksChecks = session
+					.createQuery("from LinksCheck", PersistentLinksCheck.class)
+					.stream().collect(Collectors.toList());
+//			tx.commit();
+			// TODO
+			
+			
+			linksChecks.forEach(check -> result.add(check));
+			
+//		} finally {
+//			session.close();
+//		}
 		
 		return result;
 	}
@@ -48,7 +77,31 @@ public class PersistentLinksCheckDAO implements LinksCheckDAO {
 	public void addLinksCheck(LinksCheck check) {
 		if (check instanceof PersistentLinksCheck) {
 			PersistentLinksCheck persistentCheck = (PersistentLinksCheck) check;
-			sessionFactory.getCurrentSession().persist(persistentCheck);
+			//TODO
+			Session session = null;
+			try {
+				session = sessionFactory.getCurrentSession(); 
+			} catch(HibernateException e) {
+				session = sessionFactory.openSession();
+			}
+			if (!session.isOpen()) {
+				session = sessionFactory.openSession();
+			}
+			
+			Transaction tx = null;
+			try {
+				tx = session.beginTransaction();
+				session.persist(persistentCheck);
+				for (PersistentCheckedLink link : persistentCheck.getCheckedLinks()) {
+					session.persist(link);
+				}
+				tx.commit();
+			} catch(Exception e) {
+				if (tx != null) tx.rollback();
+				throw e;
+			} finally {
+				session.close();
+			}
 		} else {
 			throw new IllegalArgumentException("Illegal type of argument");
 		}

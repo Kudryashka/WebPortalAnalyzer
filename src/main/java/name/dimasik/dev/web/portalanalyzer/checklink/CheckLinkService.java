@@ -60,6 +60,7 @@ public class CheckLinkService {
 	private JobDetail jobDetail;
 	private Trigger nowTrigger;
 	private CheckLinksDAO checkLinksDAO;
+	private LinksCheckDAO linksCheckDAO;
 
 	/**
 	 * <b>Don't call this manually!</b>
@@ -98,6 +99,14 @@ public class CheckLinkService {
 	@Autowired
 	public void setCheckLinksDAO(CheckLinksDAO checkLinksDAO) {
 		this.checkLinksDAO = checkLinksDAO;
+	}
+
+	/**
+	 * Using for {@link LinksCheckDAO} injection.
+	 */
+	@Autowired
+	public void setLinksCheckDAO(LinksCheckDAO linksCheckDAO) {
+		this.linksCheckDAO = linksCheckDAO;
 	}
 
 	/**
@@ -224,7 +233,7 @@ public class CheckLinkService {
 				} catch (FailingHttpStatusCodeException | IOException e) {
 					logger.error("Error on page loading. Exception message: " + e.getMessage());
 				}
-				
+			
 				if (page != null) {
 					logger.debug("Catch links with type : Anchor");;
 					//catch anchors
@@ -237,12 +246,13 @@ public class CheckLinkService {
 				}
 			}
 		} catch (Throwable e) {
-			logger.error("ERROR :: getAllLinksOnPage() Msg => " + e.getMessage());
+			logger.error("ERROR :: getAllLinksOnPage() Class => " + e.getClass().getName() + " Msg => " + e.getMessage());
 		}
 			
 		return result;
 	}
 	
+	//TODO return void
 	/**
 	 * Check links on the portal.
 	 * @return List with {@link LinkInfo} elements for every link founded on the portal from start locations.
@@ -257,6 +267,8 @@ public class CheckLinkService {
 	 */
 	public final List<LinkInfo> checkLinksOnPortal() {
 		logger.info("Start checking links on the portal");
+		
+		Date start = new Date();
 		
 		String portalDN = prefsProvider.getStringPreference(Preference.PORTAL_DOMAIN_NAME);
 		int portalPort = prefsProvider.getIntegerPreference(Preference.PORTAL_PORT_NUMBER);
@@ -326,6 +338,9 @@ public class CheckLinkService {
 			}
 		}
 		
+		Date end = new Date();
+		
+		saveLinksCheckResult(start, end, checkedLinks);
 		return checkedLinks;
 	}
 	
@@ -427,14 +442,38 @@ public class CheckLinkService {
 	 * @param infos
 	 */
 	@Transactional
+	@Deprecated
 	public void saveCheckLinksResult(Date date, List<LinkInfo> infos) {
 		//TODO
 		checkLinksDAO.saveCheckLinksResult(date, infos);
 	}
 	
 	@Transactional
+	@Deprecated
 	public HashMap<Date, List<LinkInfo>> getCheckLinkResults() {
 		return checkLinksDAO.getResults();
+	}
+	
+	/**
+	 * TODO
+	 * @param start
+	 * @param end
+	 * @param infos
+	 */
+//	@Transactional
+	public void saveLinksCheckResult(Date start, Date end, List<LinkInfo> infos) {
+		logger.info("Save links check result. Links infos count: " + infos.size());
+		LinksCheck linksCheck = PersistentLinksCheck.fromLinkInfos(start, end, infos);
+		linksCheckDAO.addLinksCheck(linksCheck);
+	}
+	
+	/**
+	 * TODO
+	 */
+	@Transactional
+	public List<LinksCheck> getCheckResults(int daysCount) {
+		List<LinksCheck> checks = linksCheckDAO.getLinksChecks(daysCount);
+		return checks;
 	}
 	
 	/**

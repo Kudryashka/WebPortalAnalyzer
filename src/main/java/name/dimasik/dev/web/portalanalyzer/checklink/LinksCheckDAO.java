@@ -15,7 +15,7 @@ public interface LinksCheckDAO {
 	 * @param days Count of days before today.
 	 * @return List of links checks for period.
 	 */
-	List<LinksCheck> getLinksCheck(int days);
+	List<LinksCheck> getLinksChecks(int days);
 	
 	/**
 	 * Add new links check to be saved.

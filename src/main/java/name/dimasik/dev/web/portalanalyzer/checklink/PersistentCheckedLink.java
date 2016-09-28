@@ -2,6 +2,9 @@ package name.dimasik.dev.web.portalanalyzer.checklink;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,10 +19,15 @@ import javax.persistence.Table;
 @Entity(name = "CheckedLink")
 @Table(name = "checked_links")
 public class PersistentCheckedLink implements CheckedLink {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false, unique = true)
+	private int id;
 
 	@ManyToOne
 	@JoinColumn(name = "check_id", nullable = false)
-	private LinksCheck linksCheck;
+	private PersistentLinksCheck linksCheck;
 	
 	@Column(name = "link_status", nullable = false, length = 15)
 	private LinkStatus linkStatus;
@@ -39,8 +47,16 @@ public class PersistentCheckedLink implements CheckedLink {
 	@Column(name = "redirect_url", columnDefinition = "TEXT")
 	private String redirectUrl;
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	@Override
-	public LinksCheck getLinksCheck() {
+	public PersistentLinksCheck getLinksCheck() {
 		return linksCheck;
 	}
 
@@ -74,9 +90,10 @@ public class PersistentCheckedLink implements CheckedLink {
 		return redirectUrl;
 	}
 
+	//TODO
 	@Override
 	public void setLinksCheck(LinksCheck check) {
-		this.linksCheck = check;
+		this.linksCheck = (PersistentLinksCheck) check;
 	}
 
 	@Override

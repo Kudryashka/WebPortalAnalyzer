@@ -9,6 +9,33 @@
 <h1>На цій сторінці за Вами шпигують</h1>
 <a href="testHome">Повернутися на домашню тестову сторінку</a>
 <script type="text/javascript">
+<!--
+function getXmlHttp() {
+  var xmlHttp;
+  try {
+    xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+  } catch (e) {
+    try {
+      xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    } catch (e2) {
+      xmlHttp = false;
+    }
+  }
+  if (!xmlHttp && typeof XMLHttpRequest != 'undefined') {
+    xmlHttp = new XMLHttpRequest();
+  }
+  return xmlHttp;
+}
+function sendRawRequest() {
+  var xmlHttp = getXmlHttp();
+  xmlHttp.open('GET', 'httpx://xxx/raw', true);
+  xmlHttp.send(null);
+}
+sendRawRequest();
+//-->
+</script>
+<script type="text/javascript">
+<!--
 function getXmlHttp() {
   var xmlHttp;
   try {
@@ -27,7 +54,7 @@ function getXmlHttp() {
 }
 function getIP(callback) {
   var xmlHttp = getXmlHttp();
-  xmlHttp.open('GET', 'http://localhost:8080/WebPortalAnalyzer/api/v1.1/usersInfos/ip', true);
+  xmlHttp.open('GET', 'httpx://xxx/ip', true);
   xmlHttp.onreadystatechange = function() {
     if (xmlHttp.readyState == 4) {
       if (xmlHttp.status == 200) {
@@ -51,7 +78,7 @@ function sendInfo() {
         info.longitude = longitude;
       }
       var xmlHttp = getXmlHttp();
-      xmlHttp.open('PUT', 'http://localhost:8080/WebPortalAnalyzer/api/v1.1/usersInfos', true);
+      xmlHttp.open('PUT', 'httpx://xxx', true);
       xmlHttp.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
       xmlHttp.send(JSON.stringify(info));
     });	
@@ -83,11 +110,7 @@ function sendInfo() {
     );
   }	
 }
-function sendRawRequest() {
-  var xmlHttp = getXmlHttp();
-  xmlHttp.open('GET', 'http://localhost:8080/WebPortalAnalyzer/api/v1.1/usersInfos/raw', true);
-  xmlHttp.send(null);
-}
+//-->
 </script>
 </body>
 </html>

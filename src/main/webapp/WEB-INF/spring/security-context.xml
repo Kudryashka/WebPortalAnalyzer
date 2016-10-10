@@ -12,12 +12,21 @@
 	
 	<sec:http entry-point-ref="unauthorizedAuthenticationEntryPoint">
 		<sec:csrf disabled="true"/>
+		<!-- Login/Logout permissions -->
 		<sec:intercept-url pattern="/api/login" access="permitAll"/>
 		<sec:intercept-url pattern="/api/logout" access="permitAll"/>
-		<!-- 
-		<sec:intercept-url pattern="/api/v1.0/portalEmptySearch/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_VISITOR')"/>
-		<sec:intercept-url pattern="/api/v1.0/portalUsersInfo/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_VISITOR')"/>
-		 -->
+		<!-- Requests acceptable from JavaScript side -->
+		<sec:intercept-url pattern="/api/v1.1/usersInfos/raw" access="permitAll"/>
+		<sec:intercept-url pattern="/api/v1.1/usersInfos/ip" access="permitAll"/>
+		<sec:intercept-url pattern="/api/v1.1/usersInfos" access="permitAll"/>
+		<!-- Test pages :: TODO delete -->
+		<sec:intercept-url pattern="/api/testHome" access="permitAll"/>
+		<sec:intercept-url pattern="/api/testUserInfo" access="permitAll"/>
+		<sec:intercept-url pattern="/api/testPageWithLinks" access="permitAll"/>
+		<sec:intercept-url pattern="/api/testAddSearchQuery" access="permitAll"/>
+		<!-- Other permissions -->
+		<sec:intercept-url pattern="/api/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_VISITOR')"/>
+		
 		<sec:form-login
 			login-processing-url="/api/login"
 			username-parameter="username"

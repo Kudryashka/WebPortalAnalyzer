@@ -54,7 +54,7 @@ public class LinksCheckController implements ExceptionHandledController {
 	public void setCheckLinkService(CheckLinkService checkLinkService) {
 		this.checkLinkService = checkLinkService;
 	}
-
+	
 	/**
 	 * Request to run check of links on the portal.
 	 */
@@ -81,8 +81,9 @@ public class LinksCheckController implements ExceptionHandledController {
 	@GetMapping("/status")
 	public ResponseEntity<JsonStatus> getStatus() {
 		logger.info("status()");
-		//TODO
-		return ResponseEntity.ok(new JsonStatus(JsonStatus.Status.FREE));
+		boolean isProcessing = checkLinkService.isProcessing();
+		return ResponseEntity.ok(
+				new JsonStatus(isProcessing ? JsonStatus.Status.RUNNING : JsonStatus.Status.FREE));
 	}
 	
 	/**
@@ -173,7 +174,7 @@ public class LinksCheckController implements ExceptionHandledController {
 				unreachable += d.unreachable;
 				redirect += d.redirect;
 			}
-			int total = ok + error + unreachable + redirect;
+			int total = checks.size();
 			Summary summary = new Summary(total, ok, error, unreachable, redirect);
 			return new JsonReport(summary, details);
 		}

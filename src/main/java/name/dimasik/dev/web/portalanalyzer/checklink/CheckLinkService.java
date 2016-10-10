@@ -127,6 +127,15 @@ public class CheckLinkService {
 	
 	/**
 	 * TODO
+	 * TODO think about multithreading
+	 * @return
+	 */
+	public boolean isProcessing() {
+		return scheduler.isJobExecuting(CheckLinksSchedulerJob.class);
+	}
+	
+	/**
+	 * TODO
 	 */
 	public void processCheckLinksOnPortalNow() {
 		boolean isProcessing = scheduler.isJobExecuting(CheckLinksSchedulerJob.class);

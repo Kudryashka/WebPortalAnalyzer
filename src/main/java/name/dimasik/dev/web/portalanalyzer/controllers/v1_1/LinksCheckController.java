@@ -33,7 +33,6 @@ import name.dimasik.dev.web.portalanalyzer.util.WrongIDFormatException;
  */
 @RestController("LinksCheckController_v1.1")
 @RequestMapping("/api/v1.1/linksCheck")
-@CrossOrigin
 public class LinksCheckController implements ExceptionHandledController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LinksCheckController.class);

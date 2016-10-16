@@ -30,7 +30,6 @@ import name.dimasik.dev.web.portalanalyzer.util.WrongMessageFormatException;
  */
 @RestController("SearchRequestsController_v1.1")
 @RequestMapping("/api/v1.1/searchRequests")
-@CrossOrigin
 public class SearchRequestsController implements ExceptionHandledController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SearchRequestsController.class);
